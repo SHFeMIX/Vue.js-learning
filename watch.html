@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app">
+        <input v-model="searchText"/>
+    </div>
+
+</body>
+
+<script>
+    Vue.createApp({
+
+        data () {
+            return {
+               searchText: ""
+            }
+        },
+        watch: {
+            searchText (newVal, oldVal) {
+                if (newVal.length > 10) {
+                    alert('文本太长了')
+                }
+            }
+        },
+        methods: {
+            
+        }
+    }).mount('#app');
+</script>
+
+</html>

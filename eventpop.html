@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div @click.capture="click1" :style="style">
+            外层
+            <div @click.capture="click2" :style="style">
+                <!-- 当前层capture与否不会有影响，上层capture才会有影响 -->
+                中层
+                <div @click.capture="click3" :style="style">
+                    内层
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script>
+    Vue.createApp({
+
+        data () {
+            return {
+               style: {
+                border: 'solid red'
+               }
+            }
+        },
+
+        methods: {
+            click1() {
+                console.log('外层');
+            },
+            click2() {
+                console.log('中层');
+            },
+            click3() {
+                console.log('内层');
+            }
+        }
+    }).mount('#app');
+</script>
+
+</html>

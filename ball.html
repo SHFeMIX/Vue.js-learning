@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        width: 440px;
+        height: 440px;
+        background-color: blanchedalmond;
+        display: inline;
+    }
+
+    .ball {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        background-color: red;
+        border-radius: 50%;
+        left: 100px;
+        top: 100px;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <div class="container" @mousemove.stop="move">
+            <div class="ball" :style="{left: offsetX + 'px', top: offsetY + 'px'}"></div>
+        </div>
+    </div>
+</body>
+
+<script>
+    Vue.createApp({
+
+        data () {
+            return {
+               offsetX: 0,
+               offsetY: 0,
+            }
+        },
+
+        methods: {
+            move(event) {
+                //检查右边不能出界
+                if (event.clientX + 30 > 440) {
+                    this.offsetX = 380;
+                //检查左边不能出界
+                } else if (event.clientX - 30 < 0) {
+                    this.offsetX = 0;
+                } else {
+                    this.offsetX = event.clientX - 30;
+                }
+                
+                //检查下边不能出界
+                if (event.clientY + 30 > 440) {
+                    this.offsetY = 380;
+                //检查上边不能出界`
+                } else if (event.clientY - 30 < 0) {
+                    this.offsetY = 0;
+                } else {
+                    this.offsetY = event.clientY - 30;
+                }
+            }
+        }
+    }).mount('#app');
+</script>
+
+</html>

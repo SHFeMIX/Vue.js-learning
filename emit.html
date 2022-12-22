@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app">
+        <my-alert @myclick="appfunc" title="按钮1"></my-alert>
+        <my-alert @myclick="appfunc2" title="按钮2"></my-alert>
+    </div>
+
+</body>
+
+<script>
+    const App = Vue.createApp({
+
+        data () {
+            return {
+               
+            }
+        },
+
+        methods: {
+            appfunc() {
+                console.log('点击了自定义组件')
+            },
+            appfunc2(param) {
+                console.log('点击了自定义组件2' + param + 2)
+            }
+            
+        }
+    })
+
+    const alertComponent = {
+        props: ['title'],
+       methods :{
+            click1() {
+                console.log(1)
+            },
+            click2() {
+                console.log(2)
+            },
+        },
+        template: `<div><button @click="$emit('myclick', title)">{{title}}</button></div>`
+    }
+    // myclick 就像是一个函数的参数，把这个元素的click事件要绑定的父组件的函数赋值给myclick
+
+    App.component('my-alert', alertComponent)
+    App.mount('#app')
+</script>
+
+</html>

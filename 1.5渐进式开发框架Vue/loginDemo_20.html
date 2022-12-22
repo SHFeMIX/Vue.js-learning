@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<style>
+    #a {
+        border-radius: 30px;
+        width: 100px;
+        margin-top: 20px;
+        color: white;
+        background-color: blue;
+        text-align: center;
+        margin: 20px auto;
+    }
+
+    /*#app {
+        display: flex; 
+        flex-direction: column; 
+        align-items: center
+    }*/
+    /* 
+    用这个，哪怕a的margin不auto也全都是居中，
+    用text-align：center，最后那个登陆不知道为什么不会居中，要在它上面设置margin auto才可以
+    */
+</style>
+
+<body>
+    <div id="app" style="text-align:center">
+        <h1>{{title}}</h1>
+        <div v-if="noLogin">账号：<input v-model="userName" type='text'/></div>
+        <div v-if="noLogin">密码：<input v-model="password" type='text'/></div>
+        <div v-on:click="click" id="a">{{buttonTitle}}</div>
+    </div>
+
+</body>
+
+<script>
+    Vue.createApp({
+
+        data () {
+            return {
+               title: "欢迎您：未登录",
+               noLogin: true,
+               userName: "",
+               password: "",
+               buttonTitle: "登录"
+            }
+        },
+
+        methods: {
+            click() {
+                if (this.noLogin) {
+                    this.login()
+                }
+                else {
+                    this.logout()
+                }
+            },
+            login() {
+                if (this.userName.length > 0 && this.password.length > 0) {
+                    alert(`userName:${this.userName} password:${this.password}`)
+                    this.noLogin = false
+                    this.title = `欢迎您：${this.userName}`
+                    this.buttonTitle = "注销"
+                    this.userName = this.password = ""
+                }
+                else if (this.userName.length > 0 && this.password.length == 0) {
+                    alert("请输入密码")
+                }
+                else if (this.userName.length == 0 && this.password.length > 0) {
+                    alert("请输入账号")
+                }
+                else {
+                    alert("请输入账号和密码")
+                }
+            },
+            logout() {
+                this.noLogin = true
+                this.title = "欢迎您：未登录"
+                this.buttonTitle = "登录"
+            }
+            
+        }
+    }).mount('#app');
+</script>
+
+</html>

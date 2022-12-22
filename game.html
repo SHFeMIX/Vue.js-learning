@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        position: relative;
+        margin: 0 auto;
+        width: 440px;
+        height: 440px;
+        background-color: blanchedalmond;
+    }
+    .ball {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        background-color: orange;
+        border-radius: 50%;
+    }
+    .board {
+        position: absolute;
+        width: 80px;
+        height: 10px;
+        background-color: red;
+        bottom: 0px;
+        border-radius: 5px;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <!-- 游戏区域 -->
+        <div class="container">
+            <!-- 底部挡板 -->
+            <div class="board" :style="{left: boardX + 'px'}"></div>
+            <!-- 弹球 -->
+            <div class="ball" :style="{left: ballX + 'px', top: ballY + 'px'}"></div>"
+            <!-- 游戏结束提示 -->
+            <h1 v-if="fail" style="text-align: center;">游戏失败</h1>
+        </div>
+    </div>
+
+</body>
+
+<script>
+    Vue.createApp({
+
+        data () {
+            return {
+               boardX: 0,
+               
+               ballX: 0,
+               ballY: 0,
+
+               rateX: 0.1,
+               rateY: 0.1,
+
+               fail: false
+            }
+        },
+        mounted() {
+            document.addEventListener('keydown', this.keydown)
+            console.log(document)
+            //随机弹球的运动速度和方向
+            this.rateX = Math.random() + 0.1
+            this.rateY = Math.random() + 0.1
+
+            //开启计数器，控制弹球移动
+            this.timer = setInterval(() => {
+
+                //检查右边不能出界
+                if (this.ballX + 30 > 440) {
+                    this.rateX = -this.rateX
+                }
+                //检查左边不能出界
+                if (this.ballX < 0) {
+                    this.rateX = -this.rateX
+                }
+                //检查上边不能出界
+                if (this.ballY < 0) {
+                    this.rateY = -this.rateY
+                }
+
+                //碰到挡板反弹
+                if (this.ballY >= 440 - 30 - 10) {
+                    //挡板接住了弹球，反弹
+                    if (this.ballX + 30 >= this.boardX && this.ballX <= this.boardX + 80) {
+                        this.rateY = -this.rateY
+                    } 
+                }
+                
+                //碰到下界失败
+                if (this.ballY >= 440 - 30) {
+                    //挡板没接住弹球，游戏失败
+                    this.fail = true
+                    clearInterval(this.timer)
+                }
+                
+                this.ballX += this.rateX
+                this.ballY += this.rateY
+                //console.log(this.ballX, this.ballY)
+                
+            }, 2)
+        },
+        methods: {
+            /*log(event) {
+                console.log('log')
+            },*/
+
+            keydown(event) {
+                if (event.key == 'ArrowLeft' && this.boardX > 10) {
+                    this.boardX -= 30
+                }
+                else if (event.key == 'ArrowRight' && this.boardX < 440 - 80) {
+                    this.boardX += 30
+                }
+            }
+        }
+    }).mount('#app');
+</script>
+
+</html>

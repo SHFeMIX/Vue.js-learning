@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app">
+        <h1 v-if="show">Title</h1>
+        <p v-else>如果不是标题就显示段落</p>
+        <button @click="this.show = !this.show">change</button>
+        <!--这里写不写this都可以 -->
+    </div>
+</body>
+
+<script>
+    Vue.createApp({
+
+        data() {
+            return {
+                'show': true
+            }
+        },
+
+        methods: {
+
+        }
+    }).mount('#app');
+</script>
+
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<style>
+    #ball {
+        position: absolute;
+        z-index: 1;
+    }
+
+    #hoop {
+        position: absolute;
+        top: 150px;
+        left: 600px;
+        height: 300px;
+        width: 300px;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <img src='ball.png' :style="ball_style" id='ball' 
+            @mousedown="this.hold = true" 
+            @mousemove.prevent="move_ball" 
+            @mouseup="this.hold = false, back()">
+        </img>
+        <h1 id="scoreboard">Score: {{score}}</h1>
+        <img src='hoop.png' id='hoop'></img>
+    </div>
+</body>
+
+<script>
+    Vue.createApp({
+
+        data () {
+            return {
+                score: 0,
+                ball_style: {
+                    left: '50px',
+                    top: '70px',
+                    size: '150px'
+                },
+                hold: false,
+                up: 0
+            }
+        },
+
+        computed: {
+            offset() {
+                return parseInt(this.ball_style.size) / 2
+            }
+        },
+
+        methods: {
+            move_ball(event) {
+                if (!this.hold) {
+                    return
+                }
+                newX = event.clientX - this.offset
+                newY = event.clientY - this.offset
+                // console.log(newX, newY, typeof newX, typeof newY)
+                this.ball_style.left = newX + 'px'
+                this.ball_style.top = newY + 'px'
+                // console.log(this.ball_style.left, this.ball_style.top)
+
+                if (823 > event.clientX && event.clientX > 676) {
+                    if (event.clientY < 310) {
+                        this.up = 1;
+                    }
+                    else {
+                        if (this.up == 1) {
+                            this.score++;
+                        }
+                        this.up = 0;
+                    }
+                }
+                else {
+                    this.up = 0;
+                }    
+            },
+            back() {
+                this.ball_style.left = '50px'
+                this.ball_style.top = '70px'
+            }
+        }
+    }).mount('#app');
+</script>
+
+</html>

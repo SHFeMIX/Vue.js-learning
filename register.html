@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<style>
+    .container {
+        margin: 0 auto;
+        margin-top: 70px;
+        text-align: center;
+        width: 300px;
+    }
+
+    .subTitle {
+        color: gray;
+        font-size: 14px;
+    }
+
+    .title {
+        font-size: 45px;
+    }
+
+    .input {
+        width: 90%;
+    }
+
+    .inputContainer {
+        text-align: left;
+        margin-bottom: 20px;
+    }
+
+    .subContainer {
+        text-align: left;
+    }
+
+    .field {
+        font-size: 14px;
+    }
+
+    .input {
+        border-radius: 6px;
+        height: 25px;
+        margin-top: 10px;
+        border-color: silver;
+        border-style: solid;
+        background-color: cornsilk;
+    }
+
+    .tip {
+        margin-top: 5px;
+        font-size: 12px;
+        color: gray;
+    }
+
+    .setting {
+        font-size: 9px;
+        color: black;
+    }
+
+    .label {
+        font-size: 12px;
+        margin-left: 5px;
+        height: 20px;
+        vertical-align: middle;
+    }
+
+    .checkbox {
+        height: 20px;
+        vertical-align: middle;
+    }
+
+    .btn {
+        border-radius: 10px;
+        height: 40px;
+        width: 300px;
+        margin-top: 30px;
+        background-color: deepskyblue;
+        border-color: blue;
+        color: white;
+    }
+</style>
+
+<body>
+    <div id="app" class="container">
+        <div class="container">
+            <div class="subTitle">加入我们，共创美好世界</div>
+            <h1 class="title">创建你的帐号</h1>
+            <div v-for="item, index in fields" class="inputContainer">
+                <div class="field">
+                    {{item.title}}
+                    <!-- <span v-if="item.required" ... -->
+                    <span v-if="index != 1 || required_email" style="color: red;">*</span>
+
+                    <input v-model="item.model" class="input" type="item.type" />
+                    <div class="tip" v-if="index == 2">请确认密码长度需要大雨6位</div>
+                </div>
+            </div>
+            <div class="subContainer">
+                <div class="setting">偏好设置</div>
+                <input v-model="required_email" @click="log" class="checkbox" type="checkbox" /><label class="label">接受更新邮件</label>
+            </div>
+            <button @click="createAccount" class="btn">创建账号</button>
+        </div>
+
+    </div>
+
+</body>
+
+<script>
+    Vue.createApp({
+
+        data() {
+            return {
+                fields: [
+                    {
+                        title: "用户名",
+                        //required: false,
+                        type: "text",
+                        model: "",
+                    },
+                    {
+                        title: "邮箱",
+                        //required: false,
+                        type: "email",
+                        model: "",
+                    },
+                    {
+                        title: "密码",
+                        //required: true,
+                        type: "password",
+                        model: "",
+                    }
+                ],
+                required_email: false //
+            }
+        },
+
+        computed: {
+            name: {
+                get() {
+                    return this.fields[0].model
+                },
+                set(value) {
+                    this.fields[0].model = value
+                }
+            },
+            email: {
+                get() {
+                    return this.fields[1].model
+                },
+                set(value) {
+                    this.fields[1].model = value
+                }
+            },
+            password: {
+                get() {
+                    return this.fields[2].model
+                },
+                set(value) {
+                    this.fields[2].model = value
+                }
+            },
+            /*required_email: {
+                get() {
+                    return this.fields[1].required
+                },
+                set(value) {
+                    this.fields[1].required = value
+                }
+            }*/
+        },
+
+        methods: {
+            emailCheck() {
+                var verify = /.*@.*/
+                return verify.test(this.email)
+            },
+            createAccount() {
+                if (this.name == "") {
+                    alert("用户名不能为空")
+                    return
+                }
+                if (this.password.length < 6) {
+                    alert("密码长度需要大于6位")
+                    return
+                }
+                console.log(this.required_email)
+                if (this.required_email == true) {
+                    if (this.email.length == 0) {
+                        alert("邮箱不能为空")
+                        return
+                    }
+                    else if (!this.emailCheck()) {
+                        alert("邮箱格式不正确")
+                        return
+                    }
+                }
+                alert("注册成功")
+            },
+            log() {
+                console.log(event)
+            }
+        }
+    }).mount('#app');
+</script>
+
+</html>

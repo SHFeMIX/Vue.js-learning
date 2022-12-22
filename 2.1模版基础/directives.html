@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<style>
+    #h1 {
+        color: red
+    }
+
+    .h1 {
+        color: blue
+    }
+</style>
+
+<body>
+    <div id="app">
+        <h1 v-if="show" v-bind:[prop]='name' v-on:click="click">标题</h1>
+    </div>
+
+
+    <script>
+        Vue.createApp({
+
+            data() {
+                return {
+                    show: true,
+                    prop: 'id',
+                    name: 'h1'
+                }
+            },
+
+            methods: {
+                click() {
+                    this.prop = (this.prop == 'id') ? 'class' : 'id'
+                }
+            }
+        }).mount('#app');
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+
+    <style>
+        .red {
+            color: red;
+        }
+
+        .blue {
+            color: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div :class="{blue: isBlue, red:isRed}">示例文案</div>
+
+        <div :class="style">示例文案</div>
+
+        <div :class="[redClass, fontClass]">示例文案</div>
+
+        <div :style="{color: textColor}">示例文案</div>
+
+        <div :style="styleObject">示例文案</div>
+    </div>
+
+</body>
+
+<script>
+    Vue.createApp({
+
+        data() {
+            return {
+                isBlue: true,
+                isRed: false,
+
+                style: {
+                    blue: false,
+                    red: true
+                },
+
+                redClass: 'red',
+                fontClass: 'font',
+
+                textColor: 'blue',
+
+                styleObject: {
+                    color: 'red',
+                    fontSize: '20px'
+                }
+            }
+        },
+
+        methods: {
+
+        }
+    }).mount('#app');
+</script>
+
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div @click="log('单击事件')">单击事件</div>
+        <div @dblclick="log('双击事件')">双击事件</div>
+        <div @mousedown="log('鼠标按下')">鼠标按下</div>
+        <div @mouseup="log('鼠标抬起')">鼠标抬起</div>
+        <div @mousemove="log('鼠标移动')">鼠标移动</div>
+        <div @mouseover="log('鼠标移入')">鼠标移入</div>
+        <div @mouseout="log('鼠标移出')">鼠标移出</div>
+        <input @focus="log('focus')" @blur="log('blur')" @change="log('change')" @select="log('select')"/>
+        <input @keydown="log('keydown')" @keyup="log('keyup')" />
+    </div>
+
+</body>
+
+<script>
+    Vue.createApp({
+
+        data () {
+            return {
+               
+            }
+        },
+
+        methods: {
+            log(msg) {
+                console.log(msg);
+            }
+        }
+    }).mount('#app');
+</script>
+
+</html>

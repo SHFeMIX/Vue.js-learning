@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue3 demo</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div style="text-align: center;" id="Application">
+        <h1>{{ count }}</h1>
+        <h2>{{type}}</h2>
+        <button v-on:click="clickbutton">点击</button>
+    </div>
+</body>
+
+<script>
+    // 定义一个Vue组件，名为App
+    const App = {
+        // 定义组件中的数据
+        data() {
+            return {
+                // 目前我们只用到count数据
+                count: 0
+            }
+        },
+        computed: {
+            type() {
+                return this.count % 2 == 0 ? '偶数' : '奇数'
+            }
+        },
+        // 定义组件中的函数
+        methods: {
+            // 实现单机按钮的方法
+            clickbutton() {
+                this.count++;
+            }
+        }
+    }
+    // 将Vue组件绑定到页面上id为Application的元素上
+    Vue.createApp(App).mount('#Application')
+</script>
+
+</html>

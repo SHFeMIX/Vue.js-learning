@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app">
+        <my-input v-model="inputText"></my-input>
+        <div>{{inputText}}</div>
+        <button @click="this.inputText = ''">清空</button>
+    </div>
+</body>
+
+<script>
+    const App = Vue.createApp({
+        data() {
+            return {
+                inputText: "",
+            }
+        }
+    })
+
+    const inputComponent = {
+        props: ['modelValue'],
+        methods: {
+            action(event) {
+                this.$emit('update:modelValue', event.target.value)
+            }
+        },
+        template: `<div><span>输入框:</span><input type="text" @input="action" :value="modelValue"/></div>`
+        //真实html元素的值v-model的是父组件的inputText， 
+        //把v-model的modelValue传给子组件展示
+        //每次子组件需要修改inputText时，把事件传递给父组件，调用update:modelValue方法并传递要修改的新的值
+        
+
+    }
+
+    App.component('my-input', inputComponent)
+    App.mount('#app')
+</script>
+
+</html>

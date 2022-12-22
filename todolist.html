@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>待办任务列表</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app">
+        <form @submit.prevent="addTask">
+            <span>新建任务</span>
+            <input v-model="taskText" placeholder="请输入任务"/>
+            <button>添加</button>
+        </form>
+
+        <ol>
+            <li v-for="(item, index) in todos">
+                {{item}}
+                <button @click="remove(index)">删除任务</button>
+                <hr/>
+            </li>
+        </ol>
+    </div>
+</body>
+
+<script>
+    Vue.createApp({
+        data () {
+            return {
+               todos: [],
+               taskText: ""
+            }
+        },
+
+        methods: {
+            addTask() {
+                if (this.taskText.length == 0) {
+                    alert("请输入任务");
+                }
+                else {
+                    this.todos.push(this.taskText)
+                    this.taskText = ""
+                }  
+            },
+
+            remove(index) {
+                this.todos.splice(index, 1)
+            }
+        }
+    }).mount('#app');
+</script>
+
+</html>
