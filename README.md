@@ -1,2 +1,2 @@
-# Vue3-learning
+# Vue.js-learning
 code and exercises for learning Vue3
