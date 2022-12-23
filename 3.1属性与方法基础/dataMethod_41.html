@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <template id="my_temp">
+        <div>{{count}}</div>
+        <div>{{type}}</div>
+        <div>{{typefunc()}}</div>
+        <button @click="add">click</button>
+    </template>
+    <!-- 使用函数与计算属性结果完全一致，区别在于计算属性会对结果进行缓存，下次访问时如果其所依赖的属性值没有变化，其内的逻辑代码就不会重复执行 -->
+    <!-- 而函数则不同，每次访问都会重新执行函数内的代码获取结果 -->
+</body>
+
+<script>
+    // 创建组件并获取组件实例
+    let instance = Vue.createApp({
+        template: '#my_temp',
+
+        data () {
+            return {
+               count: 0
+            }
+        },
+
+        computed: {
+            type () {
+                return this.count > 10 ? 'big' : 'small'
+            }
+        },
+        // 计算属性也可以自定义set方法
+
+        methods: {
+            add() {
+                this.count ++
+            },
+
+            typefunc() {
+                return this.count > 10 ? 'big' : 'small'
+            }
+        }
+    }).mount('#app');
+    // 可以获取到组件中的data数据
+    console.log(instance.$data.count)
+    console.log(instance.count)
+    instance.add()
+    console.log(instance.count)
+    console.log(instance.add)
+    instance.count = 0
+</script>
+
+</html>

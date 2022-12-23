@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app">
+        <input type="checkbox" v-model="football.select"/>足球
+        <input type="checkbox" v-model="basketball.select"/>篮球
+        <input type="checkbox" v-model="valleyball.select"/>排球
+        <p>{{computed_list}}</p>
+        <input type="checkbox" value="足球" v-model="checklist"/>足球
+        <input type="checkbox" value="篮球" v-model="checklist"/>篮球
+        <!-- <input type="checkbox" value="篮球" v-model="checklist"/>篮球 -->
+        <input type="checkbox" value="排球" v-model="checklist"/>排球
+        <p>{{checklist}}</p>
+
+        <hr/>
+        
+        <!-- 单选绑定一个变量，多选绑定一个数组-->
+        <select v-model="select">
+            <option>男</option>
+            <option>女</option>
+        </select>
+        <p>{{select}}</p>
+
+        <select v-model="checklist2" multiple>
+            <option>足球</option>
+            <option>篮球</option>
+            <option>排球</option>
+        </select>
+        <p>{{checklist2}}</p>
+
+    </div>
+
+</body>
+
+<script>
+    Vue.createApp({
+
+        data () {
+            return {
+                checklist: [],
+                football: {
+                    name: '足球',
+                    select: false,
+                },
+
+                basketball: {
+                    name: '篮球',
+                    select: false,
+                },
+
+                valleyball: {
+                    name: '排球',
+                    select: false,
+                },
+
+                select: '',
+                checklist2: []
+            }
+        },
+        computed: {
+            computed_list () {
+                return [this.football, this.basketball, this.valleyball].filter(i => i.select).map(i => i.name);
+            }
+        },
+        methods: {
+            
+        }
+    }).mount('#app');
+</script>
+
+</html>

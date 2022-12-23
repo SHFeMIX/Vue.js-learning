@@ -11,8 +11,12 @@
 
 <body>
     <div id="app">
-        <input v-model="textField"/>
+        <input v-model="textField"/> <!-- 当这个元素会主动产生值的时候要用v-model-->
+        <input :value="textField"/> <!-- 这里textFidle改变会改变input框显示的结果，但是在input框里输入并不会改变textfield-->
         <p>文本框输入内容: {{textField}}</p>
+
+        <textarea v-model="textarea"></textarea> <!-- textarea只能通过v-model来设置内容，不能直接用{{textarea}}在标签内插入文本-->
+        <p style="white-space: pre-line">多行文本内容:{{textarea}}</p>
     </div>
 
 </body>
@@ -22,7 +26,8 @@
 
         data () {
             return {
-               textField: ""
+               textField: "",
+               textarea: ""
             }
         },
 

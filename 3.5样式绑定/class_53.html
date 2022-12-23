@@ -21,15 +21,15 @@
 
 <body>
     <div id="app">
-        <div :class="{blue: isBlue, red:isRed}">示例文案</div>
+        <div :class="{blue: isBlue, red:isRed}">示例文案</div>  <!-- 元素的class属性会根据isBlue和isRed两个布尔值的状态而改变-->
 
-        <div :class="style">示例文案</div>
+        <div :class="style">示例文案</div> <!-- 绑定一个对象，key是class名字value是是否生效-->
 
-        <div :class="[redClass, fontClass]">示例文案</div>
+        <div :class="[redClass, fontClass]">示例文案</div> <!-- 直接绑定数组，每个元素都是一个class的名字，全都生效-->
 
-        <div :style="{color: textColor}">示例文案</div>
+        <div :style="{color: textColor}">示例文案</div> <!-- 绑定一个内连对象字面量，key就是属性名字，value是值，可以是data里定义的数据-->
 
-        <div :style="styleObject">示例文案</div>
+        <div :style="styleObject">示例文案</div> <!-- 直接绑定一个data里定义的对象-->
     </div>
 
 </body>
