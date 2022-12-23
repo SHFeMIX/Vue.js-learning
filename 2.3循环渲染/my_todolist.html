@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <template id="my_temp">
+        <form @submit.prevent="submit">
+            新建任务
+            <input type="text" v-model="text" placeholder="Enter your task">
+            <button type="submit">添加</button>
+        </form>
+
+        <ol>
+            <li v-for="(item, index) in list">
+                {{item}} 
+                <button type="button" @click="delete(index)">删除</button> 
+                <hr />
+            </li>
+        </ol>
+    </template>
+
+</body>
+
+<script>
+    Vue.createApp({
+        template: '#my_temp',
+
+        data () {
+            return {
+               text: '',
+               list: []
+            }
+        },
+
+        methods: {
+            submit() {
+                if (this.text) {
+                    this.list.push(this.text)
+                    this.text = ''
+                }
+                else {
+                    alert('Please enter task')
+                }
+            },
+
+            delete(index) {
+                this.list.splice(index, 1)
+            }
+        }
+    }).mount('#app');
+</script>
+
+</html>
