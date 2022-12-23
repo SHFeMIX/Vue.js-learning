@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div v-for="(item, index) in list">{{item + '.' + index}}</div>  <!-- v-for写在什么元素上，什么元素就会被循环渲染多次--> <!-- 获取列表索引， 语法为(item, index)-->
+        <button @click="click">reverse</button>  <!-- v-for实际上就实现了对这个数据对象的绑定，数据发生改变，渲染结果也会自动改变-->
+        <div v-for="item in object_list">{{item}}</div> 
+        <div v-for="({ name }, index) in filter(object_list)">{{name + '.' + index}}</div> <!-- 解构赋值 --> <!-- 在渲染前对数据额外处理-->
+    </div>
+
+</body>
+
+<script>
+    Vue.createApp({
+
+        data() {
+            return {
+                list: [1, 2, 3, 4, 5],
+
+                object_list: [
+                    {
+                        name: 'list',
+                        age: 11
+                    },
+                    {
+                        name: 'list2',
+                        age: 12
+                    },
+                    {
+                        name: 'list3',
+                        age: 13
+                    }
+                ]
+            }
+        },
+
+        methods: {
+            click () {
+                this.list.reverse();
+            },
+            filter(list) {
+                return list.filter(item => item.age <= 12)
+            }
+        }
+    }).mount('#app');
+</script>
+
+</html>

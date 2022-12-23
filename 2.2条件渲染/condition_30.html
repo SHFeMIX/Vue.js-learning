@@ -15,6 +15,15 @@
         <p v-else>如果不是标题就显示段落</p>
         <button @click="show = !show">change</button>
         <!--这里写不写this都可以 -->
+        <br />
+        <input type="text" placeholder="分数" v-model="mark">
+        <h1 v-if="mark == 100">满分</h1>
+        <h1 v-else-if="mark >= 60">及格</h1>
+        <template v-else>
+            <p>不及格</p>
+            <p>不及格</p>
+            <p>不及格</p>
+        </template>
     </div>
 </body>
 
@@ -23,7 +32,8 @@
 
         data() {
             return {
-                'show': true
+                show: true,
+                mark: 0,
             }
         },
 
