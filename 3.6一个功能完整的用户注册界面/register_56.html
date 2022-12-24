@@ -90,7 +90,7 @@
     <div id="app" class="container">
         <div class="container">
             <div class="subTitle">加入我们，共创美好世界</div>
-            <h1 class="title">创建你的帐号</h1>
+            <h1 class="title">创建你的账号</h1>
             <div v-for="item, index in fields" class="inputContainer">
                 <div class="field">
                     {{item.title}}
@@ -98,7 +98,7 @@
                     <span v-if="index != 1 || required_email" style="color: red;">*</span>
 
                     <input v-model="item.model" class="input" type="item.type" />
-                    <div class="tip" v-if="index == 2">请确认密码长度需要大雨6位</div>
+                    <div class="tip" v-if="index == 2">请确认密码长度需要大于6位</div>
                 </div>
             </div>
             <div class="subContainer">

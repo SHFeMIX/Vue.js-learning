@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<style>
+    #app {
+        margin: 0 auto;
+        width: 300px
+    }
+
+    .subtitle {
+        color: grey;
+        text-align: center;
+        font-size: 14px;
+        margin-top: 70px
+    }
+
+    .title {
+        text-align: center;
+        font-size: 45px
+    }
+
+    .field_container {
+        margin-bottom: 20px;
+        font-size: 14px
+    }
+
+    .input {
+        border-radius: 6px;
+        background-color: cornsilk;
+        width: 90%;
+        height: 25px;
+        margin-top: 10px
+    }
+
+    .tip {
+        margin-top: 5px;
+        font-size: 12px;
+        color: grey
+    }
+
+    button {
+        margin-top: 30px;
+        background-color: deepskyblue;
+        width: 100%;
+        height: 40px;
+        border-radius: 10px;
+        color: white;
+        border-color: blue
+    }
+</style>
+
+<body>
+    <div id="app"></div>
+
+    <template id="my_temp">
+        <p class="subtitle">加入我们，共创美好世界</p>
+        <h1 class="title">创建你的账号</h1>
+
+        <div v-for="item in fields" class="field_container">
+            {{item.name}} <span v-if="item.name != '邮箱' || require_email" style="color: red">*</span>
+            <br />
+            <input class="input" v-model="item.value">
+            <p v-if="item.name == '密码'" class="tip">请确认密码长度需要大于6位</p>
+        </div>
+
+        <p style="font-size: 9px; margin-bottom:0px">偏好设置</p>
+        <input v-model="require_email" type="checkbox" name="if_email"><label for="if_email"
+            style="margin-left: 5px;font-size: 12px">接受更新邮件</label>
+
+        <br />
+        <button @click="log">创建账号</button>
+
+    </template>
+
+</body>
+
+<script>
+    Vue.createApp({
+        template: '#my_temp',
+
+        data() {
+            return {
+                fields: [
+                    {
+                        name: '用户名',
+                        value: ''
+                    },
+                    {
+                        name: '邮箱',
+                        value: ''
+                    },
+                    {
+                        name: '密码',
+                        value: ''
+                    }
+                ],
+
+                require_email: false
+            }
+        },
+
+        computed: {
+            name: {
+                get() {
+                    return this.fields[0].value
+                },
+                set(value) {
+                    this.fields[0].value = value
+                }
+            },
+
+            email: {
+                get() {
+                    return this.fields[1].value
+                },
+                set(value) {
+                    this.fields[1].value = value
+                }
+            },
+
+            password: {
+                get() {
+                    return this.fields[2].value
+                },
+                set(value) {
+                    this.fields[2].value = value
+                }
+            }
+        },
+
+        methods: {
+            emailCheck() {
+                var verify = /.*@.*/
+                return verify.test(this.email)
+            },
+            
+            log() {
+                if (!this.name) {
+                    alert('用户名不能为空')
+                    return
+                }
+                else if (this.password.length < 6) {
+                    alert('密码长度需要大于6位')
+                    return
+                }
+                else if (this.require_email) {
+                    if (!this.email) {
+                        alert('邮箱不能为空')
+                        return
+                    }
+                    else if (!this.emailCheck()) {
+                        alert('邮箱格式不正确')
+                        return
+                    }          
+                }
+
+                alert('注册成功')
+                this.name = this.email = this.password = ''
+            }
+        }
+    }).mount('#app');
+</script>
+
+</html>
