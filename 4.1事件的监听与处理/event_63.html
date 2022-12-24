@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <template id="my_temp">
+        <div>点击次数: {{count}}</div>
+        <!-- 绑定一个在methods里定义的函数或者单行js代码都可以 -->
+        <button @click="count ++">加</button>
+        <button @click="minus(2, $event), log()">减</button>
+    </template>
+</body>
+
+<script>
+    Vue.createApp({
+        template: '#my_temp',
+
+        data () {
+            return {
+               count: 0
+            }
+        },
+
+        methods: {
+            minus(step, event) {
+                this.count -= step
+                console.log(event)
+            },
+
+            log() {
+                console.log(1)
+            }
+        }
+    }).mount('#app');
+</script>
+
+</html>

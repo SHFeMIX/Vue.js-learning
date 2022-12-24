@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    .background {
+        background-color: blanchedalmond;
+        width: 440px;
+        height: 440px;
+    }
+
+    .ball {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: red;
+        position: absolute;
+    }
+</style>
+
+<body>
+    <div id="app"></div>
+
+    <template id="my_temp">
+        <div class="background" @mousemove="mousemove">
+            <div class="ball" :style="{left: offsetX + 'px', top: offsetY + 'px'}"></div>
+        </div>
+    </template>
+</body>
+
+<script>
+    Vue.createApp({
+        template: '#my_temp',
+
+        data() {
+            return {
+                offsetX: 0,
+                offsetY: 0,
+                value: 0
+            }
+        },
+        
+        computed: {
+            real_value() {
+                if (this.value < 0) {
+                    return 0
+                }
+                if (this.value > 380) {
+                    return 380
+                }
+                return this.value
+            }
+        },
+
+        methods: {
+            mousemove(event) {
+                /*this.offsetX = event.clientX - 30
+                this.offsetY = event.clientY - 30
+
+                if (this.offsetX < 0) {
+                    this.offsetX = 0
+                }
+
+                if (this.offsetY < 0) {
+                    this.offsetY = 0
+                }
+
+                if (this.offsetX > 380) {
+                    this.offsetX = 380
+                }
+
+                if (this.offsetY > 380) {
+                    this.offsetY = 380
+                }*/
+                
+                // 把计算属性当函数用，简化代码，不愧是我
+                this.value = event.clientX - 30
+                this.offsetX = this.real_value
+
+                this.value = event.clientY - 30
+                this.offsetY = this.real_value
+            }
+        }
+    }).mount('#app');
+</script>
+
+</html>
