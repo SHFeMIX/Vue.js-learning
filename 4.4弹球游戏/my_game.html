@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    .background {
+        margin: 0 auto;
+        width: 440px;
+        height: 440px;
+        background-color: blanchedalmond;
+        position: relative;
+    }
+
+    .ball {
+        position: absolute;
+        background-color: orange;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+    }
+
+    .board {
+        bottom: 0px;
+        position: absolute;
+        background-color: red;
+        height: 10px;
+        width: 80px;
+        border-radius: 5px;
+    }
+
+    .fail_tip {
+        text-align: center;
+        margin-top: 0px;
+        /* 这里的margin会影响background的屏幕最上面的间隙，不知道为什么*/
+        padding-top: 40px;
+
+    }
+</style>
+
+<body>
+    <div id="app"></div>
+
+    <template id="my_temp">
+        <div class="background">
+            <div class="ball" :style="{left: ballX + 'px', top: ballY + 'px'}"></div>
+            <div class="board" :style="{left: boardX + 'px'}"></div>
+            <h1 v-if="fail" class="fail_tip">游戏失败</h1>
+        </div>
+        <div style="text-align: center">{{mouseX + ', ' + mouseY}}</div>
+    </template>
+</body>
+
+<script>
+    Vue.createApp({
+        template: '#my_temp',
+
+        data() {
+            return {
+                boardX: 0,  /* 0到360 */
+                step: 30,
+                fail: false,
+
+                ballX: 0,
+                ballY: 0,
+
+                mouseX: 0,
+                mouseY: 0,
+            }
+        },
+
+        methods: {
+            move_board(event) {
+                if (event.key == 'ArrowLeft' && this.boardX > 0) {
+                    this.boardX -= this.step
+                }
+                else if (event.key == 'ArrowRight' && this.boardX < 360) {
+                    this.boardX += this.step
+                }
+            },
+
+            show_mouse(event) {
+                this.mouseX = event.clientX
+                this.mouseY = event.clientY
+            }
+        },
+
+        computed: {
+            touch_board() {
+                return (this.ballX >= this.boardX - 15) && (this.ballX <= this.boardX + 65) && (this.ballY >= 400)  
+            }
+        },
+
+        mounted() {
+            document.addEventListener('mousemove', this.show_mouse)
+            document.addEventListener('keydown', this.move_board)
+
+            rateX = Math.random() + 0.1
+            rateY = Math.random() + 0.1
+            const timer = setInterval(() => {
+                if (this.ballX < 0 || this.ballX > 410) {
+                    rateX = -rateX
+                }
+                if (this.ballY < 0 || this.touch_board) {
+                    rateY = -rateY
+                }
+                console.log(this.touch_board)
+                if (this.ballY >= 410) {
+                    console.log('fail')
+                    this.fail = true
+                    clearInterval(timer)
+                }
+                this.ballX += rateX
+                this.ballY += rateY
+            }, 2)
+        }
+    }).mount('#app');
+</script>
+
+</html>
