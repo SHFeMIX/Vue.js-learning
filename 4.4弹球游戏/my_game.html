@@ -88,11 +88,6 @@
                 else if (event.key == 'ArrowRight' && this.boardX < 360) {
                     this.boardX += this.step
                 }
-            },
-
-            show_mouse(event) {
-                this.mouseX = event.clientX
-                this.mouseY = event.clientY
             }
         },
 
@@ -103,7 +98,7 @@
         },
 
         mounted() {
-            document.addEventListener('mousemove', this.show_mouse)
+            document.addEventListener('mousemove', (event) => {this.mouseX = event.clientX; this.mouseY = event.clientY})
             document.addEventListener('keydown', this.move_board)
 
             rateX = Math.random() + 0.1
@@ -117,7 +112,6 @@
                 }
                 console.log(this.touch_board)
                 if (this.ballY >= 410) {
-                    console.log('fail')
                     this.fail = true
                     clearInterval(timer)
                 }
