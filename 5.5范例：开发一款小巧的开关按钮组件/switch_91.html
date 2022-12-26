@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue.开关组件</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app">
+        <my-switch @switch-change="change" switch-style="mini" background-color="green" border-color="green" color="blue" no="1"></my-switch>
+        <div>开关状态1:{{state1}}</div>
+        <my-switch @switch-change="change" switch-style="mormal" background-color="blue" border-color="blue" color="red" no="2"></my-switch>
+        <div>开关状态2:{{state2}}</div>
+    </div>
+
+</body>
+
+<script>
+    const switchComponent = {
+        props: ['switchStyle', 'borderColor', 'backgroundColor', 'color', 'no'],
+
+        data() {
+            return {
+                isOpen: false,
+                left: '0px'
+            }
+        },
+
+        computed: {
+            cssStyleBG() {
+                return {
+                    position: 'relative',
+                    borderColor: this.borderColor,
+                    borderWidth: '2px',
+                    borderStyle: 'solid',
+                    width: '55px',
+                    height: '30px',
+                    borderRadius: this.switchStyle == 'mini' ? '30px' : '10px',
+                    backgroundColor: this.isOpen ? this.backgroundColor : 'white'
+                }
+                
+            },
+
+            cssStyleBtn() {
+                return {
+                    position: 'absolute',
+                    width: '30px',
+                    height: '30px',
+                    left: this.left,
+                    borderRadius: this.switchStyle == 'mini' ? '50%' : '8px',
+                    backgroundColor: this.color,
+                }
+            }
+        },
+
+        methods: {
+            click() {
+                this.isOpen = !this.isOpen
+                this.left = this.isOpen ? '25px' : '0px'
+                this.$emit('switchChange', this.isOpen, this.no)
+            }
+        },
+
+        template:   `<div :style="cssStyleBG" @click="click">
+                        <div :style="cssStyleBtn"></div>
+                    </div>`
+    }
+
+    const App = Vue.createApp({
+        data() {
+            return {
+                state1: '关',
+                state2: '关'
+            }
+        },
+
+        methods: {
+            change(isOpen, no) {
+                value = isOpen? '开' : '关'
+                if (no == 1) {
+                    this.state1 = value
+                }
+                else {
+                    this.state2 = value
+                }
+            }
+        }
+    })
+
+    App.component('my-switch', switchComponent)
+    App.mount('#app')
+</script>
+
+</html>
