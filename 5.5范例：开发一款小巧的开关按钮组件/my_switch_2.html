@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app">
+        <template v-for="(item, index) in state_list">
+            <my-switch :is-open="item" :no="index" @switch-change="change" :switch-style="index >= 2 ? 'mini' : 'normal'" color="green" button-color="blue"></my-switch>
+            <div>{{item}}</div>
+        </template>
+    </div>
+
+</body>
+
+<script>
+    const switchComponent = {
+        props: ['switchStyle', 'color', 'buttonColor', 'no', 'isOpen'],
+
+        computed: {
+            background() {
+                return {
+                    position: 'relative',
+                    borderStyle: 'solid',
+                    borderColor: this.color,
+                    borderWidth: '2px',
+                    height: '50px',
+                    width: '55px',
+                    height: '30px',
+                    borderRadius: this.switchStyle == 'mini' ? '30px' : '10px',
+                    backgroundColor: this.isOpen == '开' ? this.color : 'white',
+                }
+            },
+
+            button() {
+                return {
+                    position: 'absolute',
+                    left: this.isOpen == '开' ? '25px' : '0px',
+                    backgroundColor: this.buttonColor,
+                    height: '100%',
+                    width: '30px',
+                    borderRadius: this.switchStyle == 'mini' ? '50%' : '8px',
+                }
+            }
+        },
+
+        methods: {
+            click() {
+                this.$emit('switchChange', this.no)
+            }
+        },
+
+        template :  `
+                    <div :style="background" @click="click">
+                        <div :style="button"></div>
+                    </div>
+                    `
+    }
+
+
+    const App = Vue.createApp({
+        data () {
+            return {
+                state_list: ['关', '开', '关', '开', '关']
+                // 开关组件状态由父组件传入，初始状态不再一定是关
+            }
+        },
+
+        methods: {
+            change(no) {
+                this.state_list[no] = this.state_list[no] == '开' ? '关' : '开'
+            }
+        }
+    })
+
+    App.component('my-switch', switchComponent)
+    App.mount('#app')
+</script>
+
+</html>
