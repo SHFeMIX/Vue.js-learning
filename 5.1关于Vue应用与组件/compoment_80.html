@@ -11,8 +11,8 @@
 
 <body>
     <div id="app">
-        <my-alert title="按钮1"></my-alert>
-        <my-alert title="按钮2"></my-alert>
+        <my-alert></my-alert>
+        <my-alert></my-alert>
     </div>
 
 </body>
@@ -23,7 +23,7 @@
     const alertComponent = {
         data() {
             return {
-                msg: 'hello world',
+                msg: '警告框提示',
                 count: 0
             }
         },
@@ -32,8 +32,7 @@
                 alert(this.msg + this.count++)
             }
         },
-        props: ["title"],
-        template: `<div><button @click='click'>{{title}}</button></div>`
+        template: `<div><button @click='click'>按钮</button></div>`
     }
 
     App.component('my-alert', alertComponent)

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app">
+        <my-alert title="按钮1"></my-alert>
+        <my-alert title="按钮2"></my-alertan>
+    </div>
+
+</body>
+
+<script>
+    const App = Vue.createApp({})
+
+    const alertComponent = {
+        data() {
+            return {
+                msg: '警告框提示',
+                count: 0
+            }
+        },
+        methods: {
+            click() {
+                alert(this.msg + this.count++)
+            }
+        },
+
+        props:['title'],
+        template: `<div><button @click='click'>{{title}}</button></div>`
+    }
+
+    App.component('my-alert', alertComponent)
+    App.mount('#app')
+
+</script>
+
+</html>

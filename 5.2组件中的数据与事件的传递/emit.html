@@ -11,8 +11,10 @@
 
 <body>
     <div id="app">
-        <my-alert @myclick="appfunc" title="按钮1"></my-alert>
+        <!-- myclick是子组件在某个情况下会通知父组件执行的方法，具体要执行哪个就看父组件模板里给子组件的myclick绑定的哪个-->
+        <my-alert @click="my_method" @myclick="appfunc" title="按钮1"></my-alert>
         <my-alert @myclick="appfunc2" title="按钮2"></my-alert>
+        <!--这里myclick相当于是子组件暴露给外部可设置的一个参数，指定了子组件在某个情况下通知父组件调用的方法，子组件只有在$emit()里才可以使用z这些参数比如myclick，用来通知父组件调用myclick绑定的方法-->
     </div>
 
 </body>
@@ -31,7 +33,10 @@
                 console.log('点击了自定义组件')
             },
             appfunc2(param) {
-                console.log('点击了自定义组件2' + param + 2)
+                console.log('点击了自定义组件2' + param)
+            },
+            my_method() {
+                console.log('自己的')
             }
 
         }
@@ -42,12 +47,14 @@
         methods: {
             click1() {
                 console.log(1)
+                this.$emit('myclick', this.title)  // 在模板里不用写this，不在模板里都要写
             },
             click2() {
                 console.log(2)
             },
         },
         template: `<div><button @click="$emit('myclick', title)">{{title}}</button></div>`
+        // button被点击，我就会通知父组件调用myclick对应的方法，具体对应的是那个方法就看父组件的模板里给子组件的myclick绑定的是什么方法
     }
 
     App.component('my-alert', alertComponent)
