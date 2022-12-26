@@ -11,10 +11,12 @@
 
 <body>
     <div id="app">
-        <!-- myclick是子组件在某个情况下会通知父组件执行的方法，具体要执行哪个就看父组件模板里给子组件的myclick绑定的哪个-->
+        <!-- myclick代表了子组件在某个情况下会通知父组件执行的方法，具体要执行哪个就看父组件模板里给子组件的myclick绑定的哪个-->
         <my-alert @click="my_method" @myclick="appfunc" title="按钮1"></my-alert>
+        <!--子组件告诉父组件说：我会在某某情况下通知你调用你自己的某个方法，至于具体调用哪个就看你模板里传给我哪个了；在某某情况下你想哪个方法被调用，就在模板里给myclick绑定哪个-->
         <my-alert @myclick="appfunc2" title="按钮2"></my-alert>
-        <!--这里myclick相当于是子组件暴露给外部可设置的一个参数，指定了子组件在某个情况下通知父组件调用的方法，子组件只有在$emit()里才可以使用z这些参数比如myclick，用来通知父组件调用myclick绑定的方法-->
+        <!--这里myclick相当于是子组件暴露给外部可设置的一个参数，指定了子组件在某个情况下通知父组件调用的方法，子组件只有在$emit()里才可以使用这些参数比如myclick，用来通知父组件调用myclick绑定的方法-->
+        <!--my-alert组件里myclick代表了组件的button被点击时会通知父组件调用的方法，父组件希望appfunc被调用，就给myclick绑定appfunc，希望别的被调用就绑定别的-->
     </div>
 
 </body>
@@ -54,7 +56,7 @@
             },
         },
         template: `<div><button @click="$emit('myclick', title)">{{title}}</button></div>`
-        // button被点击，我就会通知父组件调用myclick对应的方法，具体对应的是那个方法就看父组件的模板里给子组件的myclick绑定的是什么方法
+        // button被点击，我就会通知父组件调用myclick对应的父组件的方法，具体对应的是那个方法就看父组件的模板里给子组件的myclick绑定的是什么方法
     }
 
     App.component('my-alert', alertComponent)
