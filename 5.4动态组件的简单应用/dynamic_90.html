@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app">
+        <input type="radio" value="page1" v-model="page">页面1
+        <input type="radio" value="page2" v-model="page">页面2
+        <component :is="page"></component>
+        <!--通过给component标签的is属性绑定不同的组件名字，动态的改变要渲染的组件-->
+    </div>
+
+</body>
+
+<script>
+    const App = Vue.createApp({
+        data () {
+            return {
+               page: ''
+            }
+        }
+    })
+
+    const page1 = {
+        template: `<div style="color:red">页面组件1</div>`
+    }
+
+    const page2 = {
+        template: `<div style="color:blue">页面组件2</div>`
+    }
+
+    App.component('page1', page1)
+    App.component('page2', page2)
+    App.mount('#app')
+</script>
+
+</html>
