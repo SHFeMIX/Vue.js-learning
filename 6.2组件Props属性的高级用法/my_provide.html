@@ -19,6 +19,23 @@
 <script>
     const App= Vue.createApp({})
 
+    /*
+    响应式index = 0
+    for i in range:
+        index ++
+        temp = index
+        render(temp, index) // temp是index某一刻的值，不是响应式；index是响应式所以最终渲染的全都会是index的最终值
+        // 最终结果
+        （1， range）
+        （2， range）
+        （3， range）
+         ...
+         ,,,
+    */
+
+    Vue.use(Vue)
+    */
+
     const listCom = {
         props: {
             count: Number
