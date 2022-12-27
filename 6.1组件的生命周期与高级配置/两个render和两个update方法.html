@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <template id="my_temp">
+        <sub-com>{{content}}</sub-com>
+        <button @click="changeShow">测试</button>
+    </template>
+</body>
+
+<script>
+    const sub = {
+        beforeUpdate() {
+            console.log('组件即将更新')
+        },
+
+        updated() {
+            console.log('组件更新完成')
+        },
+
+        renderTracked(event) {
+            console.log('虚拟DOM重新渲染时调用')
+        },
+
+        renderTriggered() {
+            console.log('虚拟DOM被触发渲染时调用')
+        },
+
+        template: `<div><slot></slot></div>`
+    }
+
+    const App = Vue.createApp({
+        template: '#my_temp',
+
+        data () {
+            return {
+               content: 0
+            }
+        },
+
+        methods: {
+            changeShow() {
+                this.content += 1
+            }
+        }
+    })
+
+    App.component('sub-com', sub)
+    App.mount('#app')
+</script>
+
+</html>

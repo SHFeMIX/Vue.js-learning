@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <template id="my_temp">
+    </template>
+</body>
+
+<script>
+    const App = Vue.createApp({
+        template: '#my_temp',
+
+        data () {
+            return {
+               
+            }
+        },
+
+        methods: {
+            
+        }
+    })
+
+    App.config.errorHandler = (err, vm, info) => {
+        // 捕获运行中产生的异常
+        // err参数是错误对象，info为具体错误信息
+    }
+
+    App.config.warnHandler = (msg, vm, trace) => {
+        // 捕获运行中产生的警告
+        // msg是警告信息，trace是组件的关系回溯
+    }
+
+    App.config.globalProperties = {
+        version: '1.0.0'
+        // 在这个app下任意组件的任意地方都可以通过this.version获取到数据
+    }
+</script>
+
+</html>
