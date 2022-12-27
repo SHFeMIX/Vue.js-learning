@@ -12,7 +12,10 @@
 <body>
     <div id="app">
         <template v-for="(item, index) in state_list">
-            <my-switch :is-open="item" :no="index" @switch-change="change" :switch-style="index >= 2 ? 'mini' : 'normal'" color="green" button-color="blue"></my-switch>
+            <my-switch  :is-open="item" :no="index" @switch-change="change" :switch-style="index >= 2 ? 'mini' : 'normal'" color="green" button-color="blue">{{item == '开'? item + ',' + index : None}}</my-switch>  <!-- 如果是关的话就什么都不传给插槽，渲染插槽默认值怎么实现， 现在插槽会什么都不渲染但不会触发默认值 不用插槽的话可以在组件内部做一个计算属性，通过item和index得到要渲染的值，组件内部用{{}}给模板插值 -->
+            <my-switch v-if="item == '开'" :is-open="item" :no="index" @switch-change="change" :switch-style="index >= 2 ? 'mini' : 'normal'" color="green" button-color="blue">{{item + ',' + index}}</my-switch>
+            <my-switch v-else :is-open="item" :no="index" @switch-change="change" :switch-style="index >= 2 ? 'mini' : 'normal'" color="green" button-color="blue"></my-switch>
+            <my-switch :is-open="item" :no="index" @switch-change="change" :switch-style="index >= 2 ? 'mini' : 'normal'" color="green" button-color="blue"><span v-if="item == '开'">aaa</span></my-switch> <!--{{}}里传个None还是空字符串都会被渲染而不是触发插槽默认值，v-if为false不渲染的时候会触发插槽默认值-->
             <div>{{item}}</div>
         </template>
     </div>
@@ -60,6 +63,7 @@
                     <div :style="background" @click="click">
                         <div :style="button"></div>
                     </div>
+                    (<slot>关的时候显示默认内容</slot>)
                     `
     }
 
