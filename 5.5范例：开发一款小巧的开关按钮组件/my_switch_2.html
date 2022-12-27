@@ -18,8 +18,10 @@
             <my-switch v-if="item == '开'" :is-open="item" :no="index" @switch-change="change" :switch-style="index >= 2 ? 'mini' : 'normal'" color="green" button-color="blue">{{item + ',' + index}}</my-switch>
             <my-switch v-else :is-open="item" :no="index" @switch-change="change" :switch-style="index >= 2 ? 'mini' : 'normal'" color="green" button-color="blue"></my-switch>
             <my-switch :is-open="item" :no="index" @switch-change="change" :switch-style="index >= 2 ? 'mini' : 'normal'" color="green" button-color="blue"><span v-if="item == '开'">{{item + ',' + index}}</span></my-switch> <!--{{}}里传个None还是空字符串都会被渲染而不是触发插槽默认值，v-if为false不渲染的时候会触发插槽默认值；v-show也会渲染空而不是插槽默认值因为v-shwo不是真正的不渲染，v-show相当于给插槽传了一个display：none的元素，v-if才是真正的什么都不传-->
-            <<!-- 总结： v-if为false和直接不写{{}}是真正的什么都不传会触发插槽默认值，{{}}里是个None或者空字符串甚至什么都不写以及v-show为false都是传个空元素，插槽会什么都不渲染而不是渲染默认值-->
+            <!-- 总结： v-if为false和直接不写{{}}是真正的什么都不传会触发插槽默认值，{{}}里是个None或者空字符串甚至什么都不写以及v-show为false都是传个空元素，插槽会什么都不显示而不是渲染默认值-->
             <div>{{item}}</div>
+
+        <hr/>
         </template>
     </div>
 </body>
