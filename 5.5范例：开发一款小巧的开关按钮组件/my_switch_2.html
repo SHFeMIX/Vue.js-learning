@@ -11,12 +11,14 @@
 
 <body>
     <div id="app">
-        <template v-for="(item, index) in state_list">
-            <my-switch  :is-open="item" :no="index" @switch-change="change" :switch-style="index >= 2 ? 'mini' : 'normal'" color="green" button-color="blue">{{item == '开'? item + ',' + index : None}}</my-switch>  <!-- 如果是关的话就什么都不传给插槽，渲染插槽默认值怎么实现， 现在插槽会什么都不渲染但不会触发默认值 不用插槽的话可以在组件内部做一个计算属性，通过item和index得到要渲染的值，组件内部用{{}}给模板插值 -->
+        <template v-for="(item, index) in state_list">                                                                                                                        <!--这里null还是undefined还是‘’都一样-->
+            <my-switch :is-open="item" :no="index" @switch-change="change" :switch-style="index >= 2 ? 'mini' : 'normal'" color="green" button-color="blue">{{item == '开'? item + ',' + index : ''}}</my-switch>  <!-- 如果是关的话就什么都不传给插槽，渲染插槽默认值怎么实现， 现在插槽会什么都不渲染但不会触发默认值 不用插槽的话可以在组件内部做一个计算属性，通过item和index得到要渲染的值，组件内部用{{}}给模板插值 -->
+            <my-switch :is-open="item" :no="index" @switch-change="change" :switch-style="index >= 2 ? 'mini' : 'normal'" color="green" button-color="blue"><span v-show="item == '开'">{{item + ',' + index}}</span></my-switch>
+
             <my-switch v-if="item == '开'" :is-open="item" :no="index" @switch-change="change" :switch-style="index >= 2 ? 'mini' : 'normal'" color="green" button-color="blue">{{item + ',' + index}}</my-switch>
             <my-switch v-else :is-open="item" :no="index" @switch-change="change" :switch-style="index >= 2 ? 'mini' : 'normal'" color="green" button-color="blue"></my-switch>
-            <my-switch :is-open="item" :no="index" @switch-change="change" :switch-style="index >= 2 ? 'mini' : 'normal'" color="green" button-color="blue"><span v-if="item == '开'">aaa</span></my-switch> <!--{{}}里传个None还是空字符串都会被渲染而不是触发插槽默认值，v-if为false不渲染的时候会触发插槽默认值；v-show也会渲染空而不是插槽默认值因为v-shwo不是真正的不渲染，v-show相当于给插槽传了一个display：none的元素，v-if才是真正的什么都不传-->
-            <<!-- 总结： v-if为false和直接不写{{}}是真正的什么都不传会触发插槽默认值，{{}}里是个None或者空字符串以及v-show为false是传个空元素，插槽会什么都不渲染而不是渲染默认值-->
+            <my-switch :is-open="item" :no="index" @switch-change="change" :switch-style="index >= 2 ? 'mini' : 'normal'" color="green" button-color="blue"><span v-if="item == '开'">{{item + ',' + index}}</span></my-switch> <!--{{}}里传个None还是空字符串都会被渲染而不是触发插槽默认值，v-if为false不渲染的时候会触发插槽默认值；v-show也会渲染空而不是插槽默认值因为v-shwo不是真正的不渲染，v-show相当于给插槽传了一个display：none的元素，v-if才是真正的什么都不传-->
+            <<!-- 总结： v-if为false和直接不写{{}}是真正的什么都不传会触发插槽默认值，{{}}里是个None或者空字符串甚至什么都不写以及v-show为false都是传个空元素，插槽会什么都不渲染而不是渲染默认值-->
             <div>{{item}}</div>
         </template>
     </div>
@@ -25,6 +27,8 @@
 <script>
     const switchComponent = {
         props: ['switchStyle', 'color', 'buttonColor', 'no', 'isOpen'],
+
+        emits: ['switchChange'],
 
         computed: {
             background() {
