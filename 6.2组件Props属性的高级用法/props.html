@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app">
+        初始值<input v-model="count"><br />
+        <comp1 :count="intCount"></comp1>
+    </div>
+
+   
+</body>
+
+<script>
+
+    const comp1 = {
+        // Vue是单向数据流，父组件的数据更改子组件接收到的也会更改，子组件不能更改父组件传递来的数据，也就是说props是直读的不能赋值
+        props: {
+            // 调用此组件时如果设置count属性的值不符合要求，则控制台会输出警告信息
+            count: {
+                // 定义此属性的类型
+                type: Number,
+                // 设置此属性是否为必传
+                required: false,
+                // 设置默认值
+                default: 10
+            },
+
+            // 如果只需要指定属性类型，而不需要指定更加复杂的性质，可以使用如下方式定义
+            count2: String,
+            count3: Array,
+
+            // 如果一个属性可能是多种类型，可以如下定义
+            count4: [Function, Object],
+
+            // 属性默认值可以定义为函数
+            count5: {
+                default: function() {
+                    return 10
+                }
+            },
+
+            // 也支持自定义验证, validator函数return true和false表示通过或者不通过验证
+            count6: {
+                validator: function(value) {
+                    return value >= 10 && typeof(value) == "number"
+                }
+            }   
+        },
+
+        data() {
+            return {
+                thisCount: 0
+            }
+        },
+
+        // 这种用计算属性的写法，传进来的count变了，后续渲染的值也会变；如果在data里直接: this.count只是设定一个初始值，之后哪怕count变了也不会影响后续
+        computed: {
+            innerCount() {
+                return this.count + this.thisCount
+            }
+        },
+
+        methods: {
+            click() {
+                this.thisCount ++
+            }
+        },
+
+        template: `<button @click="click">点击</button><div>计数：{{innerCount}}</div>`
+    }
+
+    const App = Vue.createApp({
+        data() {
+            return {
+                count: 0
+            }
+        },
+
+        computed: {
+            intCount() {
+                return parseInt(this.count)
+            }
+        }
+    })
+    App.component("comp1", comp1)
+    App.mount('#app')
+
+</script>
+
+</html>

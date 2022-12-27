@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app">
+        <my-list :count="5"></my-list>
+    </div>
+
+</body>
+
+<script>
+    const App= Vue.createApp({})
+
+    const listCom = {
+        props: {
+            count: Number
+        },
+
+        data() {
+            return {
+                obj: {
+                    index: 0
+                }
+            }
+        },
+
+        methods: {
+            add() {
+                this.obj.index ++
+            }
+        },
+
+        // 通过provide给所有后代组件提供数据
+        provide() {
+            return {
+                indexObj: this.obj // 包一个对象它就是响应式了，不知道为啥
+            }
+        },
+
+        template: `
+            <div style="border: red solid 10px;">
+                <my-item @addIndex="add" v-for="i in count"></my-item> 
+            </div>
+        `
+        // 给v-for渲染的组件的某个生命周期emit一个方法让父组件的一个数据++，父组件把这个数据provide出去，v-for渲染的组件和它的后代inject这个数据，这样循环渲染出来的每个组件inject获取到的都是不同的值
+        // 遇到问题，原始index改变了，子组件inject获取到的一直都是index的初始值没改变，为什么
+    }
+
+    const itemCom = {
+
+        template: `
+            <div style="border: blue solid 10px;">
+                <my-label></my-label>
+            </div>
+        `,
+
+        beforeMount() {
+            this.$emit('addIndex')       
+        },
+    }
+
+    const labelCom = {
+        // 通过inject注入任意先辈组件provide的数据，通过this直接访问到
+        inject: ['indexObj'],
+
+        template: `
+            <div>{{index}}/{{indexObj.index}}</div>
+        `,
+        // index是当前组件被渲染出来那一刻根组件里index的值，indexObj.index是全部渲染完之后根组件里index的值（因为是响应式会一直变），通过这种方式也能获取到列表总长度，循环渲染完之后index是几总长度就是几
+
+        // 这里index是这个组件被创建出来的时候1根组件里维护的index的值，渲染一个index++，实现方式为在子组件的created里emit一个方法让根组件的index++
+
+        data() {
+            return {
+                index: this.indexObj.index // 就拿一个初始值，之后再怎么变不关心
+            }
+        },
+    }
+
+    App.component('my-list', listCom)
+    App.component('my-item', itemCom)
+    App.component('my-label', labelCom)
+    App.mount('#app')
+
+</script>
+
+</html>
