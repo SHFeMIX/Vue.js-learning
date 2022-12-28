@@ -25,12 +25,14 @@
         index ++
         temp = index
         render(temp, index) // temp是index某一刻的值，不是响应式；index是响应式所以最终渲染的全都会是index的最终值
-        // 最终结果
-        （1， range）
-        （2， range）
-        （3， range）
-         ...
-         ,,,
+
+        
+    // 最终结果
+    （1， range）
+    （2， range）
+    （3， range）
+        ...
+        ,,,
     */
 
     // 书上思路是v-for渲染的时候直接把index当作属性传给子组件，也可以实现第几个子组件获取到几，这样比较简单
@@ -58,6 +60,13 @@
         provide() {
             return {
                 indexObj: this.obj // 包一个对象它就是响应式了
+                //  原理：引用类型传递的是地址，如果很多指针指向同一个对象，其中一个指针改变了对象里一个属性的值，其他所有指针访问那个值获取到的也都会是改变后的，用这种现象近似的实现响应式
+
+                //  provide出去是啥inject接收的就会是啥，如果provide依赖了一个响应式的值，那provide出去的值依赖的值改变了provide就改变进而inject收到的也改变，实现在provide组件里更改值，inject组件接收到改变
+                //  管道进去（provide）什么出来（inject）就是什么，进去的变了，出来的自然变了
+
+                //  provide一个引用类型比如对象，provide本身的值不会变一直是那个对象的地址，inject收到的也一直是那个地址。如果provide组件更改那个对象里的某个属性的值，inject组件访问那个属性也会是改变后的因为两个指针指向同一个对象，也可以实现类似响应式
+                //  管道传递的不再是值而是指针，传递指针本身一直没有变但是指针指向的对象内部的值变了，也可以实现provide组件更改某个值，inject组件访问到的也是新值
             }
         },
 
@@ -88,7 +97,7 @@
         inject: ['indexObj'],
 
         template: `
-            <div>{{index}}/{{indexObj.index}}</div>
+            <div>{{index}}/{{test.index}}-{{indexObj.index}}</div>
         `,
         // index是当前组件被渲染出来那一刻根组件里index的值，indexObj.index是全部渲染完之后根组件里index的值（因为是响应式会一直变），通过这种方式也能获取到列表总长度，循环渲染完之后index是几总长度就是几
 
@@ -96,7 +105,10 @@
 
         data() {
             return {
-                index: this.indexObj.index // 就拿一个初始值，之后indexObj再怎么变不关心；组件生成那一刻indexObj.index的值
+                index: this.indexObj.index, // 就拿一个初始值，之后indexObj再怎么变不关心；组件生成那一刻indexObj.index的值
+                //  这个 : 赋值操作不是响应式，只是给左边一个初始值，之后右边的再怎么变不会改变左边的
+                test: this.indexObj // 虽然test本身的值不会变但是test.index的值会变，原因引用类型传递的是地址， 这一现象有点类似响应式了
+                // 赋值一个引用类型，真正传递的是地址，那这时候右边被改变了左边也会访问到新值因为指针指向的同一片地址
             }
         },
     }
