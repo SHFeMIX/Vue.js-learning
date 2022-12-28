@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>不用指令且emit</title>
     <script src="https://unpkg.com/vue@next"></script>
 </head>
 
@@ -25,7 +25,6 @@
         index ++
         temp = index
         render(temp, index) // temp是index某一刻的值，不是响应式；index是响应式所以最终渲染的全都会是index的最终值
-
         
     // 最终结果
     （1， range）

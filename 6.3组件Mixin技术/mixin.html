@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app">
+        <my-comp1 title="组件1"></my-comp1>
+        <my-comp2 title="组件2"></my-comp2>
+        <my-comp3 title="组件3"></my-comp3>
+    </div>
+
+    <template id="my_temp">
+    </template>
+</body>
+
+<script>
+    // 一个组件其实就是一个对象有props, data, methods等属性，mixin也是这类对象，组件引入mixin会把mixin的内容和组件内部内容合并，类似面向对象里类的继承，两个对象合并成一个
+    // mixin的内容与组件本身冲突时（比如mixin和组件的data里都有a或者methods有同名函数）会以组件内部定义为准，但是同名的生命周期函数都会生效--
+    // mixin内定义的生命周期函数会在组件内定义的生命周期之前执行， 比如组件挂载之后先执行mixin里的mounted再执行组件内部的mounted
+    // 每个组件mixin一个对象都会分别获取一个mixin对象实例，比如两个组件mixin同一个对象，一个更改了对象里的数据不会影响另一个的mixin
+    const myMixin = {
+        props: ['title'],
+
+        methods: {
+            click() {
+                console.log(this.title)
+            }
+        }
+    }
+    const comp1 = {
+        mixins: [myMixin],
+
+        template: `
+            <div @click="click" style="border: red solid 2px">{{title}}</div>
+        `
+    }
+
+    const comp2 = {
+        mixins: [myMixin],
+
+        template: `
+            <div style="border: blue solid 2px">{{title}}</div>
+        `
+    }
+
+    const comp3 = {
+        mixins: [myMixin],
+
+        template: `
+            <div style="border: green solid 2px">{{title}}</div>
+        `
+    }
+
+    const App = Vue.createApp({})
+    App.mixin({/*全局mixin，传入一个mixin的对象*/})
+    App.component('my-comp1', comp1)
+    App.component('my-comp2', comp2)
+    App.component('my-comp3', comp3)
+    App.mount('#app')
+
+
+</script>
+
+</html>

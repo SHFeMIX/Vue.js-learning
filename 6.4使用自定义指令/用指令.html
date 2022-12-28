@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用指令没法emit</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app">
+        <my-list :count="5"></my-list>
+    </div>
+
+</body>
+
+<script>
+    const App= Vue.createApp({})
+
+    const listCom = {
+        props: {
+            count: Number
+        },
+
+        directives: {
+            add: {
+                beforeMount(el, param) {
+                    param.value.index ++
+                }
+            }
+        },
+
+        data() {
+            return {
+                obj: {
+                    index: 0
+                }
+            }
+        },
+
+        provide() {
+            return {
+                indexObj: this.obj
+            }
+        },
+
+        template: `
+            <p>{{obj.index}}</p>
+            <div style="border: red solid 10px;">
+                <my-item  v-add="obj" ></my-item> 
+            </div>
+        `
+        // v-for="i in count" my-item里的
+    }
+
+    const itemCom = {
+        template: `
+            <div style="border: blue solid 10px;">
+                <my-label></my-label>
+            </div>
+        `,
+    }
+
+    const labelCom = {
+        inject: ['indexObj'],
+
+        template: `
+            <div @click="test.index ++">{{index}}/{{test.index}}-{{indexObj.index}}</div>
+        `,
+
+        data() {
+            return {
+                index: this.indexObj.index, 
+                test: this.indexObj
+            }
+        },
+    }
+
+    App.component('my-list', listCom)
+    App.component('my-item', itemCom)
+    App.component('my-label', labelCom)
+    App.mount('#app')
+
+</script>
+
+</html>

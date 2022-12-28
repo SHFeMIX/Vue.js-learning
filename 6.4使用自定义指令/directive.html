@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app">                <!--自定义指令的参数可以写死也可以【】里写简单的表达式-->    <!--:placeHolder="obj.list[i]"-->
+        <input v-for="_ in 5" v-add:[arg.length]="obj">{{func('aaa')}}<!--通过在自定义指令里实现生命周期函数再使用在原生html元素上就可以给原生组件定义生命周期函数-->
+        <!--给自定义指令传入一个引用类型，就可以在指令里定义的生命周期里更改组件data里的数据， 简单例子为v-for渲染一个，data里某个值+1-->
+        <!--add里每次给obj的no++并且把新no加紧obj的list，并把-->
+
+        <!-- 实现v-for渲染一个，data里某个数据就++，两种思路，
+            一种是在v-for渲染的组件的生命周期里emit，父组件@绑定一个事件给data里某个值++
+            另一种是父组件data里数据定义成引用类型，在v-for组件生命周期里拿到引用类型的地址直接改，至于怎么拿到，props传，provide-inject和自定义指令传参都可以
+        -->
+
+        <!--自定义指令的意义：给原生html或自定义组件添加一些生命周期的逻辑并且代码逻辑可以访问到父组件传给指令的数据（如果传的是引用类型那还可以更改父组件data里的数据）-->
+        <!-- 数据直接传进指令内定义的生命周期函数，不给子组件访问到-->
+
+    </div>
+
+    <template id="my_temp">
+    </template>
+</body>
+
+<script>
+    const App = Vue.createApp({
+        data() {
+            return {
+                obj: {
+                    no: 0,
+                    //list:['']
+                },
+
+                arg: 'useless',
+
+                func: (n) => n // 在这里定义函数和在methods里定义有啥区别吗
+
+            }
+        },
+
+        computed: {
+            /*my_list() {
+                return this.obj.list
+            },*/
+
+            my_no() {
+                return this.obj.no
+            }
+        },
+
+        watch: {
+            // 明明实现了v-for渲染一个更改一次，但是watch只触发一次从0-5，不知道为什么，全都只触发一次，从v-for还没开始的初始值直接到v-for渲染完的最终值
+            /*my_list: {
+                handler(newValue, oldValue) {
+                    console.log('in watch')
+                    console.log(newValue, oldValue)
+                },
+                deep: true
+            },*/
+
+            my_no(newValue, oldValue) {
+                console.log('in watch')
+                console.log(newValue, oldValue)
+            }
+        }
+    })
+
+    App.directive('add', {
+        beforeMount(el, param) { // param.arg是参数，param.value是值
+            console.log("in a v-for el's beforeMount")
+            console.log(param.arg, 111111)
+            param.value.no ++
+            el.placeholder = param.value.no
+            // placeholder就是组件挂载前obj里no的值，体现了v-for渲染一个data里的一个值就++
+            //param.value.list.push(param.value.no)
+        }
+    })
+
+    App.mount('#app')
+</script>
+
+</html>
