@@ -78,7 +78,9 @@
             }
         },
 
+        // 这不就等于实现了不同组件之间双向数据流？只要都拿到同一个引用类型的地址，你改了我能拿到新的，我改了你也能拿到新的
         template: `
+            <p>{{obj.index}}</p>
             <div style="border: red solid 10px;">
                 <my-item @addIndex="add" v-for="i in count"></my-item> 
             </div>
@@ -105,7 +107,7 @@
         inject: ['indexObj'],
 
         template: `
-            <div>{{index}}/{{test.index}}-{{indexObj.index}}</div>
+            <div @click="test.index ++">{{index}}/{{test.index}}-{{indexObj.index}}</div>
         `,
         // index是当前组件被渲染出来那一刻根组件里index的值，indexObj.index是全部渲染完之后根组件里index的值（因为是响应式会一直变），通过这种方式也能获取到列表总长度，循环渲染完之后index是几总长度就是几
 
