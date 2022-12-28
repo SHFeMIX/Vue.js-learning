@@ -59,6 +59,14 @@
         // 通过provide给所有后代组件提供数据
         provide() {
             return {
+                //  provide依赖data里定义的数据，provide出去的真实值和inject收到的真实值永远相等，但是provide出去的和provide依赖的data里定义的数据不一定相等，data里定义的改变了，provide不会自动改变
+                //  provide到inject一定是响应式，那只要事先data到provide的响应式就可以了
+                //  第一种，provide本身直接赋值一个响应式的值比如computed（），依赖的值变了provide也跟着变，inject收到的自然也变了
+                //      provide赋值一个依赖了它依赖的值的函数的结果，也就是响应式的值。每次它依赖的值一变化，依赖这个值的函数就会重新运行，provide的值自然也跟着变化
+                //  第二种，provide一个引用类型比如对象，更改那个对象的某个属性的值，inject也可以访问到更改后的值因为provide和inject都是指针指向同一个对象
+
+                //  provide如果不依赖data里的数据那直接无法更改也不存在上述问题了
+
                 indexObj: this.obj // 包一个对象它就是响应式了
                 //  原理：引用类型传递的是地址，如果很多指针指向同一个对象，其中一个指针改变了对象里一个属性的值，其他所有指针访问那个值获取到的也都会是改变后的，用这种现象近似的实现响应式
 
