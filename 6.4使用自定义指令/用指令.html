@@ -17,7 +17,7 @@
 </body>
 
 <script>
-    const App= Vue.createApp({})
+    const App = Vue.createApp({})
 
     const listCom = {
         props: {
@@ -27,7 +27,7 @@
         directives: {
             add: {
                 beforeMount(el, param) {
-                    param.value.index ++
+                    param.value.index++
                 }
             }
         },
@@ -49,21 +49,33 @@
         template: `
             <p>{{obj.index}}</p>
             <div style="border: red solid 10px;">
-                <my-item  v-add="obj" ></my-item> 
+                <my-item v-add="obj" v-for="i in count"></my-item> 
             </div>
         `
         // v-for="i in count" my-item里的
     }
 
     const itemCom = {
+
+        inject: ['indexObj'],
+
+        data() {
+            return {
+                index: this.indexObj.index
+            }
+        },
+
         template: `
             <div style="border: blue solid 10px;">
+                {{index}}
                 <my-label></my-label>
             </div>
         `,
+
     }
 
     const labelCom = {
+
         inject: ['indexObj'],
 
         template: `
@@ -72,7 +84,7 @@
 
         data() {
             return {
-                index: this.indexObj.index, 
+                index: this.indexObj.index,
                 test: this.indexObj
             }
         },

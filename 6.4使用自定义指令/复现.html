@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <template id="my_temp">
+        <my-cc v-add="obj1" ></my-cc>
+        <my-cc v-add="obj1" ></my-cc>
+        <br /> 
+        <my-ic></my-ic>
+        <my-ic></my-ic>
+    </template>
+</body>
+
+<script>
+    const App = Vue.createApp({
+        template: '#my_temp',
+
+        data () {
+            return {
+               obj1: {
+                index: 0
+               },
+
+               obj2: {
+                index: 0
+               }
+            }
+        },
+
+        provide() {
+            return {
+                indexObj1: this.obj1,
+                indexObj2: this.obj2
+            }
+        },
+
+        directives: {
+            add: {
+                beforeMount(el, param) {
+                    console.log('自定义指令的beforeMount')
+                    param.value.index ++
+                },
+            },
+        },
+    })
+
+    const commandComp = {
+
+        inject: ['indexObj1'],
+
+        data() {
+            return {
+                index: this.indexObj1.index,
+            }
+        },
+
+        template: `
+        <div>
+            <button>我是用了指令的组件{{index}}</button>
+            <my-sub :indexObj='index'></my-sub>
+        </div>
+        `,
+    }
+
+    const innerComp = {
+
+        inject: ['indexObj2'],
+
+        data() {
+            return {
+                index: this.indexObj2.index,
+            }
+        },
+
+        template: `
+        <div>
+            <button>我是没用指令的组件{{index}}</button>
+            <my-sub :indexObj='index'></my-sub>
+        </div>
+        `,
+
+        beforeMount() {
+            this.indexObj2.index ++
+        },
+    }
+
+    const subComp = {
+        props: ['index'],
+
+        template: `
+            <div style="border: red solid 10px">{{index}}</div>
+        `
+    }
+
+    App.component('my-cc', commandComp)
+    App.component('my-ic', innerComp)
+    App.component('my-sub', subComp)
+    App.mount('#app')
+</script>
+
+</html>

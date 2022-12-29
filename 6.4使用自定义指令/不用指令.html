@@ -41,7 +41,7 @@
         template: `
             <p>{{obj.index}}</p>
             <div style="border: red solid 10px;">
-                <my-item ></my-item> 
+                <my-item v-for="i in count"></my-item> 
             </div>
         `
         // v-for="i in count" my-item里的
@@ -51,8 +51,15 @@
 
         inject: ['indexObj'],
 
+        data() {
+            return {
+                index: this.indexObj.index
+            }
+        },
+
         template: `
             <div style="border: blue solid 10px;">
+                {{index}}
                 <my-label></my-label>
             </div>
         `,
@@ -63,19 +70,21 @@
     }
 
     const labelCom = {
+        
         inject: ['indexObj'],
 
         template: `
             <div @click="test.index ++">{{index}}/{{test.index}}-{{indexObj.index}}</div>
         `,
-
+        
         data() {
             return {
                 index: this.indexObj.index, 
-                test: this.indexObj
+                test: this.indexObj 
             }
         },
     }
+
 
     App.component('my-list', listCom)
     App.component('my-item', itemCom)
