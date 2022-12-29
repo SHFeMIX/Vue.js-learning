@@ -95,7 +95,7 @@
     }
 
     const subComp = {
-        props: ['index'],
+        props: ['index'], // 之前是inject现在是props，应该就是这里的区别导致之前不用指令可以是先++再渲染而这里不管用不用都是先渲染再++
 
         template: `
             <div style="border: red solid 10px">{{index}}</div>
