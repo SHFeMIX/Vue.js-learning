@@ -13,11 +13,11 @@
     <div id="app"></div>
 
     <template id="my_temp">
-        <my-cc v-add="obj1" ></my-cc>
-        <my-cc v-add="obj1" ></my-cc>
+        <my-ic></my-ic>
+        <my-ic></my-ic>
         <br /> 
-        <my-ic></my-ic>
-        <my-ic></my-ic>
+        <my-cc v-add="obj1" ></my-cc>
+        <my-cc v-add="obj1" ></my-cc>
         <br /> <br /> 
         <div>obj1最终：{{obj1.index}}</div>
         <div>obj2最终：{{obj2.index}}</div>
@@ -70,7 +70,7 @@
         template: `
         <div>
             <button>我是用了指令的组件{{index}}</button>
-            <my-sub :index='index'></my-sub>
+            <my-sub></my-sub>
         </div>
         `,
     }
@@ -88,7 +88,7 @@
         template: `
         <div>
             <button>我是没用指令的组件{{index}}</button>
-            <my-sub :index='index'></my-sub>
+            <my-sub></my-sub>
         </div>
         `,
 
@@ -98,10 +98,18 @@
     }
 
     const subComp = {
-        props: ['index'], // 之前是inject现在是props，应该就是这里的区别导致之前不用指令可以是先++再渲染而这里不管用不用都是先渲染再++
+        //props: ['index'], // 之前是inject现在是props，应该就是这里的区别导致之前不用指令可以是先++再渲染而这里不管用不用都是先渲染再++
+        inject: ['indexObj1', 'indexObj2'],
+
+        data() {
+            return {
+                index1: this.indexObj1.index,
+                index2: this.indexObj2.index
+            }
+        },
 
         template: `
-            <div >{{index}}aaaaaaa</div>
+            <div >{{index1}}aaaaaaa{{index2}}</div>
         `
     }
 
@@ -113,4 +121,12 @@
 
 </html>
 
-<!--现在情况是，用指令是全部渲染完再++，不用指令是渲染完item++再渲染label所以label从1开始，复现里不管用不用指令都是全部渲染完再++-->
+<!--
+现在情况是，用指令是全部渲染完再++，不用指令是渲染完item++再渲染label所以label从1开始，复现里不管用不用指令都是全部渲染完再++
+
+现在这种写法，一个0开始一个1开始；subComp改成props接收参数两个都是0开始
+他奶奶的终于破案了：
+    三级组件通过props接收参数 => 全都是渲染完全部再++
+    三级组件通过inject接收参数 => 不用指令是渲染++渲染，用指令是渲染完全部++
+应该是inject和props的底层机制不同，组件接收到他们处于不同的生命周期的原因
+-->
