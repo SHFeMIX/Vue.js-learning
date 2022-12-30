@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>秒表计时器</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app" style="text-align: center"></div>
+
+    <template id="my_temp">
+        <button @click="change">{{text}}</button><button @click="cut">分割</button>
+        <div style="color: white; display: inline-block; background-color: black; width: 188px; height: 34px">{{second_to_str(cur_s)}}</div>
+        <button @click="clear">清除</button>
+
+        <div v-for="(item, index) in list">{{index + 1 + item}}</div>
+    </template>
+</body>
+
+<script>
+    Vue.createApp({
+        template: '#my_temp',
+
+        data() {
+            return {
+                text: "开始",
+                timer: null,
+                cur_s: 0,
+                // 两种做法
+                // 每次分割更新last分割，停止更新last停止；停止的差算当前与last停止的，分割的差算当前与last分割和停止中更晚的那个
+                // 每次分割更新last分割，停止把last停止和分割都更新； 停止的差算当前与last停止的，分割的差算当前与last分割的  // 感觉这个简单，用这个
+                last_stop_s: 0, 
+                last_cut_s: 0,  
+                list: []
+            }
+        },
+
+        computed: {
+            running: {
+                get() {
+                    return this.text != "开始"
+                },
+
+                set(value) {
+                    this.text = value ? "停止" : "开始"
+                }
+            },
+        },
+
+        methods: {
+            second_to_str(s_int) {
+                s_str = ('0000000' + s_int.toString()).slice(-7) // 不到7就前面补0到7，多于7只要最后7位
+
+                return s_str.slice(0, 2) + ":" + s_str.slice(2, 4) + "." + s_str.slice(-3)
+            },
+
+            change() {
+                if (this.running) {
+                    // 停止计时器
+                    clearInterval(this.timer)
+                    this.list.push('停止' + this.second_to_str(this.cur_s - this.last_stop_s))
+                    this.last_stop_s = this.last_cut_s = this.cur_s
+                }
+                else {
+                    // 开始计时器
+                    this.timer = setInterval(() => { this.cur_s ++ }, 1) 
+                }
+
+                this.running = !this.running
+            },
+
+            cut() {
+                if (!this.running) {
+                    return
+                }
+                this.list.push('分割' + this.second_to_str(this.cur_s - this.last_cut_s))
+                this.last_cut_s = this.cur_s
+            },
+
+            clear() {
+                if (this.running) {
+                    this.change()
+                }
+                this.cur_s = this.last_cut_s = this.last_stop_s = 0
+                this.list = []
+            }
+        }
+    }).mount('#app');
+</script>
+
+</html>
