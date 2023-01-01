@@ -79,7 +79,7 @@
             console.log(param.arg, 111111)
             param.value.no ++
             el.placeholder = param.value.no
-            // placeholder就是组件挂载前obj里no的值，体现了v-for渲染一个data里的一个值就++; 赋值操作可以截断响应式传播链，无论是=还是在对象留哦你给的:
+            // placeholder就是组件挂载前obj里no的值，体现了v-for渲染一个data里的一个值就++; 赋值操作可以截断响应式传播链，无论是=还是在对象里用的:
             //param.value.list.push(param.value.no)
         }
     })
