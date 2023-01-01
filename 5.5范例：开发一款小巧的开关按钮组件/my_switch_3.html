@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app">
+        <template v-for="(item, index) in state_list">                                                                                                               
+            <my-switch :is-open="item" @switch-change="change(index)" :switch-style="index >= 2 ? 'mini' : 'normal'" color="green" button-color="blue"><span v-if="item == '开'">{{item + ',' + index}}</span></my-switch> 
+            <my-switch :is-open="item" @switch-change="state_list[index] = state_list[index] == '开' ? '关' : '开'" :switch-style="index >= 2 ? 'mini' : 'normal'" color="green" button-color="blue"><span v-if="item == '开'">{{item + ',' + index}}</span></my-switch> 
+            <!--呀哈，直接@click不生效呢--> <!--破案了，因为my-switch不是单根元素组件（有个slot）所以直接绑定@click不生效，因为不知道透传给哪个根元素，删掉就可以触发了-->
+            <my-switch :is-open="item" @click="change(index)" :switch-style="index >= 2 ? 'mini' : 'normal'" color="green" button-color="blue"><span v-if="item == '开'">{{item + ',' + index}}</span></my-switch> 
+            <my-switch :is-open="item" @click="state_list[index] = state_list[index] == '开' ? '关' : '开'" :switch-style="index >= 2 ? 'mini' : 'normal'" color="green" button-color="blue"><span v-if="item == '开'">{{item + ',' + index}}</span></my-switch> 
+            <div>{{item}}</div>
+
+            <hr/>
+        </template>
+    </div>
+</body>
+
+<script>
+    const switchComponent = {
+        props: ['switchStyle', 'color', 'buttonColor', 'isOpen'],
+
+        emits: ['switchChange'],
+
+        computed: {
+            background() {
+                return {
+                    position: 'relative',
+                    borderStyle: 'solid',
+                    borderColor: this.color,
+                    borderWidth: '2px',
+                    height: '50px',
+                    width: '55px',
+                    height: '30px',
+                    borderRadius: this.switchStyle == 'mini' ? '30px' : '10px',
+                    backgroundColor: this.isOpen == '开' ? this.color : 'white',
+                }
+            },
+
+            button() {
+                return {
+                    position: 'absolute',
+                    left: this.isOpen == '开' ? '25px' : '0px',
+                    backgroundColor: this.buttonColor,
+                    height: '100%',
+                    width: '30px',
+                    borderRadius: this.switchStyle == 'mini' ? '50%' : '8px',
+                }
+            }
+        },
+
+        methods: {
+            click() {
+                this.$emit('switchChange')
+            }
+        },
+
+        template :  `
+                    <div :style="background" @click="click">
+                        <div :style="button"></div>
+                    </div>
+                    (<slot>关的时候显示默认内容</slot>)
+                    `
+    }
+
+
+    const App = Vue.createApp({
+        data () {
+            return {
+                state_list: ['关', '开', '关', '开', '关']
+                // 开关组件状态由父组件传入，初始状态不再一定是关
+            }
+        },
+
+        methods: {
+            change(no) {
+                this.state_list[no] = this.state_list[no] == '开' ? '关' : '开'
+            }
+        }
+    })
+
+    App.component('my-switch', switchComponent)
+    App.mount('#app')
+</script>
+
+</html>
