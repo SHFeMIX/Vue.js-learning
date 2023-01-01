@@ -11,17 +11,53 @@
 
 <body>
     <div id="app">
+        <!--其实就记得这个就好，在自定义组件上v-model:props-name="Text" 会被编译为 :props-name="Text", @update:props-name="(newValue) => (Text = newValue)"; props-name不写默认为model-value-->
+        <!--子组件内部实现符合这个要求就好了，比如要props里要有props-name，以及需要props-name改变的时候emit update:propsName，并在emit时候带上要赋予的新的值作为参数($emit('update:propsName', newValue))-->
+        
+        <!--子组件只要符合这个要求，实现为可以这么调用就好了，内部具体怎么实现随意-->
+        <!--比如，父组件的某个data里的值要与子组件里的input框输入内容实现双向绑定，父组件的模版里在子组件写上v-model："Text"-->
+        <!--方法1，子组件内部的input框value绑定为modelValue，然后给input的@input事件绑一个方法，方法内$emit('update:modelValue', newValue)-->
+        <!--方法2，子组件内部的input框也用v-model，只不过绑定的是一个计算属性，get是直接返回props里的modelValue，set是$emit('update:modelValue', newValue)-->
+        <!--其实就是子组件内部的input框的value与modelValue实现双向绑定，取随便取，改就不是直接改了要emit出去让父组件改-->
+        <!--当然了，传引用类型的流氓做法一如既往的可以实现一样的效果-->
+
+        <!--对于v-model.some-modifier:prop-name="Text"这种有修饰符的v-model，编译后还会有:prop-nameModifier="{some-modifier: true}",也就是给子组件的prop-nameModifier这个props赋值一个对象，这个v-model指令用到的修饰符对应的值会是true】-->
+
         <my-input v-model="inputText"></my-input>
+        <!-- <my-input :model-value="inputText" @update:model-value="(newValue) => {inputText = newValue}"></my-input> -->
         <div>{{inputText}}</div>
-        <button @click="this.inputText = ''">清空</button>
+        <button @click="inputText = ''">清空</button>
+
+        <my-comp v-model="inputText2"></my-comp>
+        <div>{{inputText2}}</div>
+        <button @click="inputText2 = ''">清空</button>
+    </div>
+
+    <div id="raw_v-model">
+        <input v-model="inputText1">我是用了v-model的input框框{{inputText1}}
+        <button @click="this.inputText1 = ''">清空</button>
+
+        <input :value="inputText2" @input="inputText2 = $event.target.value">我是没用v-model的input框框{{inputText2}}
+        <button @click="this.inputText2 = ''">清空</button>
     </div>
 </body>
 
 <script>
+    Vue.createApp({
+        data() {
+            return {
+                inputText1: '',
+                inputText2: '',
+            }
+        }
+    }).mount("#raw_v-model")
+
+
     const App = Vue.createApp({
         data() {
             return {
                 inputText: "",
+                inputText2: ""
             }
         }
     })
@@ -34,14 +70,28 @@
             }
         },
         template: `<div><span>输入框:</span><input type="text" @input="action" :value="modelValue"/></div>`
-        //真实html元素的值v-model的是父组件的inputText， 
-        //把v-model的modelValue传给子组件展示
-        //每次子组件需要修改inputText时，把事件传递给父组件，调用update:modelValue方法并传递要修改的新的值
-        
+        // 这个模版做的事情很简单，input框value绑定为modelValue，然后每当有输入就触发action事件
+    }
 
+    const computed = {
+        props: ['modelValue'],
+
+        computed: {
+            value: {
+                get() {
+                    return this.modelValue
+                },
+                set(newValue) {
+                    this.$emit('update:modelValue', newValue)
+                }
+            }
+        },
+        template: `<div><span>输入框:</span><input type="text" v-model="value"/></div>`
+        // 给子组件内部的模版里的input用v-model绑定到一个计算属性，get就是modelValue，set是emit出去update:modelValue，当然了要带上新值作为参数
     }
 
     App.component('my-input', inputComponent)
+    App.component('my-comp', computed)
     App.mount('#app')
 </script>
 
