@@ -23,6 +23,7 @@
 
         <!--对于v-model.some-modifier:prop-name="Text"这种有修饰符的v-model，编译后还会有:prop-name-modifier="{someModifier: true}",也就是给子组件的prop-name-modifier这个props赋值一个对象，这个v-model指令用到的修饰符对应的值会是true】-->
 
+        <!--一个小注意事项，在js代码里写驼峰比如modelValue，在html元素上写model-value-->
         <my-input v-model="inputText"></my-input>
         <!-- <my-input :model-value="inputText" @update:model-value="(newValue) => {inputText = newValue}"></my-input> -->
         <div>{{inputText}}</div>
