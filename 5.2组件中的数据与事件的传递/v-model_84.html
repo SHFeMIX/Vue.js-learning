@@ -11,17 +11,17 @@
 
 <body>
     <div id="app">
-        <!--其实就记得这个就好，在自定义组件上v-model:props-name="Text" 会被编译为 :props-name="Text", @update:props-name="(newValue) => (Text = newValue)"; props-name不写默认为model-value-->
-        <!--子组件内部实现符合这个要求就好了，比如要props里要有props-name，以及需要props-name改变的时候emit update:propsName，并在emit时候带上要赋予的新的值作为参数($emit('update:propsName', newValue))-->
+        <!--其实就记得这个就好，在自定义组件上v-model:prop-name="Text" 会被编译为 :prop-name="Text", @update:prop-name="(newValue) => (Text = newValue)"; prop-name不写默认为model-value-->
+        <!--子组件内部实现符合这个要求就好了，比如要props里要有prop-name，以及需要prop-name改变的时候emit update:propName，并在emit时候带上要赋予的新的值作为参数($emit('update:propName', newValue))-->
         
         <!--子组件只要符合这个要求，实现为可以这么调用就好了，内部具体怎么实现随意-->
         <!--比如，父组件的某个data里的值要与子组件里的input框输入内容实现双向绑定，父组件的模版里在子组件写上v-model："Text"-->
-        <!--方法1，子组件内部的input框value绑定为modelValue，然后给input的@input事件绑一个方法，方法内$emit('update:modelValue', newValue)-->
+        <!--方法1，子组件内部的input框value绑定为modelValue，然后给input框的@input事件绑一个方法，也就是每次输入都触发，方法内$emit('update:modelValue', newValue)-->
         <!--方法2，子组件内部的input框也用v-model，只不过绑定的是一个计算属性，get是直接返回props里的modelValue，set是$emit('update:modelValue', newValue)-->
         <!--其实就是子组件内部的input框的value与modelValue实现双向绑定，取随便取，改就不是直接改了要emit出去让父组件改-->
         <!--当然了，传引用类型的流氓做法一如既往的可以实现一样的效果-->
 
-        <!--对于v-model.some-modifier:prop-name="Text"这种有修饰符的v-model，编译后还会有:prop-nameModifier="{some-modifier: true}",也就是给子组件的prop-nameModifier这个props赋值一个对象，这个v-model指令用到的修饰符对应的值会是true】-->
+        <!--对于v-model.some-modifier:prop-name="Text"这种有修饰符的v-model，编译后还会有:prop-name-modifier="{someModifier: true}",也就是给子组件的prop-name-modifier这个props赋值一个对象，这个v-model指令用到的修饰符对应的值会是true】-->
 
         <my-input v-model="inputText"></my-input>
         <!-- <my-input :model-value="inputText" @update:model-value="(newValue) => {inputText = newValue}"></my-input> -->
