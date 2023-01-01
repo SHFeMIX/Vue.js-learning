@@ -88,6 +88,7 @@
         },
         template: `<div><span>输入框:</span><input type="text" v-model="value"/></div>`
         // 给子组件内部的模版里的input用v-model绑定到一个计算属性，get就是modelValue，set是emit出去update:modelValue，当然了要带上新值作为参数
+        // 因为v-model绑定的变量需要时一个能get能set的，除了在data里直接定义的，那就只能是计算属性了，与modelValue关联上的计算属性
     }
 
     App.component('my-input', inputComponent)
