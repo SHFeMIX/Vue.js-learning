@@ -14,7 +14,7 @@
 
 -----
 
-### 学习Vue的过程中(看上去实际用处不大)的思考
+### 学习Vue的过程中(看上去实际用处不大但我就是不想通不舒服)的思考
 1. Vue的数据响应式，如果一个变量是响应式的，那么在这个变量值改变的时候会自动重新运行依赖于这个变量的函数（什么computed， watch，methods里的都是函数对吧）。为什么data里的数据改变了之后渲染出来的页面会自动改变，因为页面其实也是render函数渲染出来的，如果页面依赖的data里的值变了，render函数当然重新运行，页面自然改变了。传给子组件的props是响应式的其实也是这个原理，毕竟porps写在模版里，就是模版的一部分，data到模版肯定是响应式。
 <br>
 2. provide为什么不是响应式呢，因为在provide里写法是someValue: this.someValue对吧，真正procide出去的变量是someValue，给someValue用":"赋值了this.someValue的值，也就是说从this.someValue到someValue没有经过任何的函数，就是一个:赋值操作。所以哪怕右边的数据是响应式，改变了之后也不会对左边的someValue产生任何影响，因为:不是函数不会重新运行。官方文档上也写了，想要provide响应式就把:右边的用computed()包一层。
