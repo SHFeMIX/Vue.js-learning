@@ -29,7 +29,7 @@
             return {
                 text: "开始",
                 timer: null,
-                cur_s: 0, //59500 * 2,
+                cur_s: 59500 * 60 + 29000,
                 // 两种做法
                 // 每次分割更新last分割，停止更新last停止；停止的差算当前与last停止的，分割的差算当前与last分割和停止中更晚的那个
                 // 每次分割更新last分割，停止把last停止和分割都更新； 停止的差算当前与last停止的，分割的差算当前与last分割的  // 感觉这个简单，用这个
@@ -56,7 +56,7 @@
                 // s_str = ('000000' + s_int.toString()).slice(-7) // 不到7就前面补0到7，多于7只要最后7位
                 // 00:00.000
                 s_and_ms = s_int % 60000
-                m = (s_int - s_and_ms) / 60000
+                m = (s_int - s_and_ms) / 60000 % 60
               
                 m =  ('0' + m.toString()).slice(-2)
                 s_and_ms = ('0000' + s_and_ms.toString()).slice(-5)
