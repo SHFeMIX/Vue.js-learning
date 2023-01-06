@@ -9,10 +9,22 @@
     <script src="https://unpkg.com/vue@next"></script>
 </head>
 
+<style>
+    .block {
+        border: solid;
+        border-color: black
+    }
+</style>
+
 <body>
     <div id="app"></div>
 
     <template id="my_temp">
+        <div v-for="_ in 30">
+            <div style="display:inline-block" v-for="_ in 30">
+                <div class="block"></div>
+            </div>
+        </div>
     </template>
 </body>
 

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>不用指令且emit</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app">
+        <my-list :count="5"></my-list>
+    </div>
+
+</body>
+
+<script>
+    const App= Vue.createApp({})
+
+    const listCom = {
+        props: {
+            count: Number
+        },
+
+        methods: {
+            add() {
+                this.obj.index ++
+            }
+        },
+
+        // 通过provide给所有后代组件提供数据
+        provide() {
+            return {
+                indexObj: {index: 0} // 直接定义一个对象字面量，这总不是响应式了吧，还是能实现通信，证明了能实现就是引用类型的原因和响应式没关系
+            }
+        },
+
+        template: `
+            <div style="border: red solid 10px;">
+                <my-item v-for="i in count"></my-item> 
+            </div>
+        `
+    }
+
+    const itemCom = {
+        inject: ['indexObj'],
+
+        template: `
+            <div style="border: blue solid 10px;">
+                <my-label></my-label>
+            </div>
+        `,
+
+        beforeMount() {
+            this.indexObj.index ++
+        },
+    }
+
+    const labelCom = {
+        // 通过inject注入任意先辈组件provide的数据，通过this直接访问到
+        inject: ['indexObj'],
+
+        template: `
+            <div @click="test.index ++">{{index}}/{{test.index}}-{{indexObj.index}}</div>
+        `,
+       
+        data() {
+            return {
+                index: this.indexObj.index, 
+                test: this.indexObj 
+            }
+        },
+    }
+
+    App.component('my-list', listCom)
+    App.component('my-item', itemCom)
+    App.component('my-label', labelCom)
+    App.mount('#app')
+
+</script>
+
+</html>
