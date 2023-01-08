@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <template id="my_temp">
+        <div style="width: 100px; height: 100px; background-color:blue;">
+            <test-comp props_value="我是props"></test-comp>
+        </div>
+    </template>
+</body>
+
+<script>
+    testComp = {
+        props: ['props_value'],
+
+        inject: ['provide_value'],
+
+        template: `<div style="width: 50%; height: 50%; background-color: red"></div>`,
+
+        beforeCreate() {
+            console.log('组件即将创建前')
+            console.log(this.props_value, this.provide_value)
+        },
+
+        created() {
+            console.log('组件创建完成')
+            console.log(this.props_value, this.provide_value)
+        },
+
+        beforeMount() {
+            console.log('组件即将挂栽前')
+            console.log(this.props_value, this.provide_value)
+        },
+
+        mounted() {
+            console.log('组件挂载完成')
+            console.log(this.props_value, this.provide_value)
+        },
+
+        beforeUpdate() {
+            console.log('组件即将更新')
+            console.log(this.props_value, this.provide_value)
+        },
+
+        updated() {
+            console.log('组件更新完成')
+            console.log(this.props_value, this.provide_value)
+        },
+
+        activated() {
+            console.log('被缓存的组件激活时调用')
+            console.log(this.props_value, this.provide_value)
+        },
+
+        deactivated() {
+            console.log('被缓存的组件停用时调用')
+            console.log(this.props_value, this.provide_value)
+        },
+
+        beforeUnmount() {
+            console.log('组件即将被卸载前调用')
+            console.log(this.props_value, this.provide_value)
+        },
+
+        unmounted() {
+            console.log('组件被卸载后调用')
+            console.log(this.props_value, this.provide_value)
+        },
+
+        errorCaptured(error, instance, info) {
+            console.log('捕获到来自子组件的异常时调用')
+            console.log(this.props_value, this.provide_value)
+        },
+
+        renderTracked(event) {
+            console.log('虚拟DOM重新渲染时调用')
+            console.log(this.props_value, this.provide_value)
+        },
+
+        renderTriggered() {
+            console.log('虚拟DOM被触发渲染时调用')
+            console.log(this.props_value, this.provide_value)
+        }
+
+    }
+
+    Vue.createApp({
+        components: {
+            'test-comp': testComp
+        },
+
+        template: '#my_temp',
+
+        provide() {
+            return {
+                provide_value: '我是provide'
+            }
+        },
+    }).mount('#app');
+</script>
+
+</html>
