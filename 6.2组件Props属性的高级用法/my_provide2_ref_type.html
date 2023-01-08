@@ -24,13 +24,6 @@
             count: Number
         },
 
-        methods: {
-            add() {
-                this.obj.index ++
-            }
-        },
-
-        // 通过provide给所有后代组件提供数据
         provide() {
             return {
                 indexObj: {index: 0} // 直接定义一个对象字面量，这总不是响应式了吧，还是能实现通信，证明了能实现就是引用类型的原因和响应式没关系
@@ -65,6 +58,7 @@
         template: `
             <div @click="test.index ++">{{index}}/{{test.index}}-{{indexObj.index}}</div>
         `,
+        // woc,这里test.index ++才有用，直接indexObj.index ++没用，不更新页面
        
         data() {
             return {
