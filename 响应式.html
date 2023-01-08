@@ -56,10 +56,22 @@
             }
         },
 
+        methods: {
+            meth() {
+                return {index: 0}
+            }
+        },
+
+        computed: {
+            comp() {
+                return {index: 0}
+            }
+        },
+
         provide() {
             return {
                 ref_value: this.obj,
-                no_ref_value: {index: 0}
+                no_ref_value: {index: 0} // this.meth(), this.comp 反正直接这么写都不是响应式
             }
         },
     }).mount('#app');
