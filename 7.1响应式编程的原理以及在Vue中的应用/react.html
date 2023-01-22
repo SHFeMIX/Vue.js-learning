@@ -1,0 +1,54 @@
+<script>
+    /* let a = 1;
+    let b = 2;
+    let sum = a + b;
+    console.log(sum)
+    a = 3
+    b = 4
+    console.log(sum) */
+
+    //定义对象数据
+    let a = {
+        value : 1
+    };
+    let b = {
+        value : 2
+    };
+
+    //定义处理器
+    handlerA = {
+        get(target, key) {
+            return target[key]
+        },
+
+        set(target, key, value) {
+            // 瞎写
+            sum = sum - target[key] + value
+            target[key] = value
+        }
+    };
+
+    handlerB = {
+        get(target, key) {
+            return target[key]
+        },
+
+        set(target, key, value) {
+            // 正经写法
+            target[key] = value
+            trigger() // 每次数据发生变化，自动运行依赖该数据的函数，没毛病！！
+        }
+    };
+
+    // 替换掉对象的get和set方法
+    let pa = new Proxy(a, handlerA)
+    let pb = new Proxy(b, handlerB)
+    let sum = pa.value + pb.value
+    trigger = () => sum = pa.value + pb.value
+    
+    console.log(pa.value, pb.value, sum)
+    pa.value += 1
+    console.log(pa.value, pb.value, sum)
+    pb.value = -1
+    console.log(pa.value, pb.value, sum)
+</script>

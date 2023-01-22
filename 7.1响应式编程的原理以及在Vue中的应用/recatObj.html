@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <template id="my_temp">
+        <h1>测试数据: {{[myData.value, myValue, value]}}</h1>
+        <button @click="click">点击</button>
+    </template>
+</body>
+
+<script>
+    Vue.createApp({
+        template: '#my_temp',
+
+        setup() {
+            let myData = Vue.reactive({
+                value : 0
+            })
+
+            let {value} = Vue.toRefs(myData) // 效果是value.value和myData.value的值双向绑定(computed也能实现一样的效果吧。。。,自己实现get set，toRefs算是个语法糖吧)
+            // toRefs和ref返回值是同一类型
+            let myValue = Vue.ref(0)
+            // ref出来的东西在代码里访问要.value, 在模版里不用
+            //  reactive出来的东西，该是咋咋访问就是咋访问，传进去是啥对象出来还是啥
+            function click() {
+                myData.value += 1
+                myValue.value += 1
+            }
+
+            return {
+                myData,
+                myValue,
+                click,
+                value,
+                
+            }
+        }
+    }).mount('#app');
+</script>
+
+</html>

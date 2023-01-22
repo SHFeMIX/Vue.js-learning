@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <template id="my_temp">
+        <h1>测试数据: {{[a, b.value]}}</h1>
+        <button @click="a += 1; b.value -= 1">点击</button>
+    </template>
+</body>
+
+<script>
+    Vue.createApp({
+        template: '#my_temp',
+
+        setup() {
+            let a = Vue.ref(0)
+            let b = Vue.reactive({value: 0})
+            // 默认一上来先调用一次，之后每次内部依赖的数据有变化就执行
+            let stop = Vue.watchEffect(() => {
+                console.log('a或者b或者两个都变了', a.value, b.value) // 这里有个问题啊，a和b都变了，为什么只执行了一次呢？不该是a变了来一次b变了也来一次吗
+            })
+        
+            // stop() 如果需要停止监听器，就弄个变量接住，在需要的时候调用这个函数就停了
+
+            // 如果是ref出来的可以直接就这么写
+            Vue.watch(a, (value, old) => {console.log(value, old)})
+            
+            Vue.watch(() => b.value, (value, old) => {console.log(value, old)})
+            
+            // () => b.value 这种写法，a是ref还是reactive传一个有value的对象都可以
+            // a 直接一个a这种写法，b只能是ref()的
+
+            return {
+                a,
+                b
+            }
+        }
+    }).mount('#app');
+</script>
+
+</html>
