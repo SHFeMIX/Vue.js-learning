@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户列表</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <template id="my_temp">
+        <div class="container">
+            <input type="radio" value="-1" v-model="sexFilter"/>全部
+            <input type="radio" value="0" v-model="sexFilter"/>男
+            <input type="radio" value="1" v-model="sexFilter"/>女
+        </div>
+
+        <div class="content">
+            搜索: <input type="text" v-model="searchKey"/>
+        </div>
+
+        <div class="content">
+            <table border="1" width="300px">
+                <tr>
+                    <th>姓名</th>
+                    <th>性别</th>
+                </tr>
+
+                <tr v-for="item in filteData">
+                    <td>{{item.name}}</td>
+                    <td>{{item.sex ? '女' : '男'}}</td>
+                </tr>
+            </table>
+        </div>
+
+    </template>
+</body>
+
+<script>
+    let mock = [
+        {
+            name: 'name1',
+            sex: 0
+        },
+
+        {
+            name: 'name2',
+            sex: 1
+        },
+
+        {
+            name: 'name3',
+            sex: 0
+        },
+
+        {
+            name: 'name4',
+            sex: 1
+        }
+    ]
+    Vue.createApp({
+        template: '#my_temp',
+
+        setup() {
+            
+        },
+
+        data () {
+            return {
+                // 性别筛选字段 -1是全部，0是男1是女
+               sexFilter: -1,
+               // 列表展示的数据
+               //showData: [],
+               // 获取到的初始数据
+               originData: [],
+               // 搜索的关键词
+               searchKey: ''
+            }
+        },
+
+        watch: {
+            /*sexFilter() {
+                if (this.sexFilter == -1) {
+                    this.showData = this.originData
+                }
+                else {
+                    this.showData = this.originData.filter(item => item.sex == this.sexFilter)
+                }
+            },
+
+            searchKey() {
+                if (!this.searchKey) {
+                    this.showData = this.originData
+                }
+                else {
+                    this.showData = this.originData.filter(item => item.name.search(this.searchKey) != -1)吧·
+                }
+            }*/
+
+            /*sexFilter() {
+                this.filteData()
+            },
+            searchKey() {
+                this.filteData()
+            }*/
+        },
+
+        computed: {
+            filteData() {
+                let tempData = this.originData
+                if (this.sexFilter != -1) {
+                    tempData = tempData.filter(item => item.sex == this.sexFilter)
+                }
+                if (this.searchKey) {
+                    tempData = tempData.filter(item => item.name.search(this.searchKey) != -1)
+                }
+                return tempData
+            }
+        },
+
+        mounted() {
+            // 模拟调接口获取数据
+            setTimeout(() => {this.originData = mock; this.showData = this.originData}, 3000)
+        }
+    }).mount('#app');
+</script>
+
+<style>
+    .container {
+        margin: 50px;
+    }
+
+    .content {
+        margin: 20px;
+    }
+</style>
+
+</html>
