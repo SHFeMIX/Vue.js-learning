@@ -22,6 +22,14 @@
         template: '#my_temp',
         
         setup() {
+            array = [1, 2, 3]
+            a = Vue.ref(array)
+            b = Vue.ref(array)
+            array.push(4)
+            a.value.push(5)
+            console.log(array, a.value, b.value)
+            //  没有深拷贝，一个改了另外两个也改，有点离谱。。
+
             /*
             首先，ref(data) 和 reactive({value: data}) 基本完全等价，因此只讨论reactive
 
@@ -46,6 +54,8 @@
                     比如数组的proxy也可以push，[0]索引访问, ...解构等，效果完全一致
                     可以认为除了=赋值之外其他操作都是直接操作原数据
                         这不就是引用类型的特性，其他都是对地址上的数据的操作，只有=是直接改变了指针储存的地址
+
+                操作proxy和操作原对象没有任何区别，=赋值根本就不是操作proxy对象了，直接失去对象的指向了那当然是什么都没了
 
 
                 唯独就是不能给proxy用=赋值
