@@ -36,6 +36,10 @@
             show_no_ref() {
                 return this.no_ref_value.index
             }
+        },
+
+        mounted() {
+            console.log(this.ref_value, this.no_ref_value) // 没毛病，一个是proxy一个就是object
         }
     }
     // 我勒个大槽什么情况？？？点change_ref很正常，点change_no_ref不会立刻生效，直到下一点点change_ref一起更新，为毛啊？？？
