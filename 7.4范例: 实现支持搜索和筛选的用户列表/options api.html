@@ -14,13 +14,13 @@
 
     <template id="my_temp">
         <div class="container">
-            <input type="radio" value="-1" v-model="sexFilter"/>全部
-            <input type="radio" value="0" v-model="sexFilter"/>男
-            <input type="radio" value="1" v-model="sexFilter"/>女
+            <input type="radio" value="-1" v-model="sexFilter" />全部
+            <input type="radio" value="0" v-model="sexFilter" />男
+            <input type="radio" value="1" v-model="sexFilter" />女
         </div>
 
         <div class="content">
-            搜索: <input type="text" v-model="searchKey"/>
+            搜索: <input type="text" v-model="searchKey" />
         </div>
 
         <div class="content">
@@ -66,19 +66,19 @@
         template: '#my_temp',
 
         setup() {
-            
+
         },
 
-        data () {
+        data() {
             return {
                 // 性别筛选字段 -1是全部，0是男1是女
-               sexFilter: -1,
-               // 列表展示的数据
-               //showData: [],
-               // 获取到的初始数据
-               originData: [],
-               // 搜索的关键词
-               searchKey: ''
+                sexFilter: -1,
+                // 列表展示的数据
+                //showData: [],
+                // 获取到的初始数据
+                originData: [],
+                // 搜索的关键词
+                searchKey: ''
             }
         },
 
@@ -123,7 +123,7 @@
 
         mounted() {
             // 模拟调接口获取数据
-            setTimeout(() => {this.originData = mock}, 3000)
+            setTimeout(() => { this.originData = mock }, 3000)
         }
     }).mount('#app');
 </script>
