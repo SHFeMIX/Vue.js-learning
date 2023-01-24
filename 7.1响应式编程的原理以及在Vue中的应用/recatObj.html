@@ -27,7 +27,9 @@
                 value : 0
             })
 
-            let {value} = Vue.toRefs(myData) // 效果是value.value和myData.value的值双向绑定(computed也能实现一样的效果吧。。。,自己实现get set，toRefs算是个语法糖吧)
+            let {value} = Vue.toRefs(myData) 
+            // 效果是value.value和myData.value的值双向绑定(computed也能实现一样的效果吧。。。,自己实现get set，toRefs算是个语法糖吧)
+            // 好像没有那么复杂并不是双向绑定，而是他们指向的压根就是同一个引用类型，所以你变我也变。。。。
             // toRefs和ref返回值是同一类型
             let myValue = Vue.ref(0)
             // ref出来的东西在代码里访问要.value, 在模版里不用

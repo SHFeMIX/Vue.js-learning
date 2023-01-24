@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户列表</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <template id="my_temp">
+        <div class="container">
+            <input type="radio" value="-1" v-model="sexFilter" />全部
+            <input type="radio" value="0" v-model="sexFilter" />男
+            <input type="radio" value="1" v-model="sexFilter" />女
+        </div>
+
+        <div class="content">
+            搜索: <input type="text" v-model="searchKey" />
+        </div>
+
+        <div class="content">
+            <table border="1" width="300px">
+                <tr>
+                    <th>姓名</th>
+                    <th>性别</th>
+                </tr>
+
+                <tr v-for="item in filteData">
+                    <td>{{item.name}}</td>
+                    <td>{{item.sex ? '女' : '男'}}</td>
+                </tr>
+            </table>
+        </div>
+
+    </template>
+</body>
+
+<script>
+    let mock = [
+        {
+            name: 'name1',
+            sex: 0
+        },
+
+        {
+            name: 'name2',
+            sex: 1
+        },
+
+        {
+            name: 'name3',
+            sex: 0
+        },
+
+        {
+            name: 'name4',
+            sex: 1
+        }
+    ]
+    Vue.createApp({
+        template: '#my_temp',
+
+        
+        setup() {
+            sexFilter = Vue.ref(-1)
+            searchKey = Vue.ref('')
+            originData = Vue.ref([])
+            // 完全等价于 reactive({value: []})
+
+            Vue.onMounted(() => {
+                setTimeout(() =>{originData.value = mock}, 3000)
+            })
+            
+            filteData = Vue.computed(() => {
+                let tempData = originData.value
+                if (sexFilter.value != -1) {
+                    tempData = tempData.filter(item => item.sex == sexFilter.value)
+                }
+                if (searchKey.value) {
+                    tempData = tempData.filter(item => item.name.search(searchKey.value) != -1)
+                }
+                return tempData
+            })
+
+            return {
+                sexFilter,
+                searchKey,
+                filteData
+            }
+        }
+
+        /*
+        setup() {
+            sexFilter = Vue.ref(-1)
+            searchKey = Vue.ref('')
+            originData = Vue.reactive([])
+
+            Vue.onMounted(() => {
+                setTimeout(() =>{originData.push(...mock)}, 3000)
+            })
+            
+            // 一个响应式的引用类型，怎么获取到他的原始值并且赋值给别人啊我日
+            // 不用拿到原始值，拿到proxy一样该咋用咋用
+            filteData = Vue.computed(() => {
+                let tempData = originData
+                console.log(tempData, tempData[0] ? tempData[0].name : 'aaa')
+                if (sexFilter.value != -1) {
+                    tempData = tempData.filter(item => item.sex == sexFilter.value)
+                }
+                if (searchKey.value) {
+                    tempData = tempData.filter(item => item.name.search(searchKey.value) != -1)
+                }
+                return tempData
+            })
+
+            return {
+                sexFilter,
+                searchKey,
+                filteData
+            }
+        }*/
+    }).mount('#app');
+</script>
+
+<style>
+    .container {
+        margin: 50px;
+    }
+
+    .content {
+        margin: 20px;
+    }
+</style>
+
+</html>

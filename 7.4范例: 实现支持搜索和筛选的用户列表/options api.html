@@ -111,7 +111,6 @@
 
         computed: {
             filteData() {
-                let tempData = this.originData
                 if (this.sexFilter != -1) {
                     tempData = tempData.filter(item => item.sex == this.sexFilter)
                 }
@@ -124,7 +123,7 @@
 
         mounted() {
             // 模拟调接口获取数据
-            setTimeout(() => {this.originData = mock; this.showData = this.originData}, 3000)
+            setTimeout(() => {this.originData = mock}, 3000)
         }
     }).mount('#app');
 </script>

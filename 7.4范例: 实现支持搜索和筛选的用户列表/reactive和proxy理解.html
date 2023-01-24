@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户列表</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <template id="my_temp">
+       
+    </template>
+</body>
+
+<script>
+    Vue.createApp({
+        template: '#my_temp',
+        
+        setup() {
+            /*
+            首先，ref(data) 和 reactive({value: data}) 基本完全等价，因此只讨论reactive
+
+            引入一个概念： 
+                无论怎么嵌套的数据结构都可以看作一个树状结构（不谈循环引用），节点存的不是普通类型就是引用类型的地址
+                比如【1， 2， {a: 3}】，根节点是数组的地址，两个子节点都是int，第三个子节点是对象的地址，第三个子节点有一个子节点是3
+
+            reactive传入必须是引用类型（不是就报错，注意字符串是引用类型，一个字符就不是）
+            reactive返回值是原数据的代理（proxy）
+                注意：会递归地遍历所有深层嵌套的数据，遇到普通类型不变，遇到引用类型继续套上代理
+                ex：传入{a: 0, b: [1, 2, 'aaa']}, 会得到 proxy({a: 0, b: proxy([1, 2, proxy('aaa')])})
+                类似于传进去一个树状结构， 从根节点开始递归遍历整棵树，给所有引用类型套上proxy
+                
+
+            模版渲染的时候会把proxy对象再整个递归遍历解包proxy，真实渲染结果是原始数据
+                比如 proxy({a: 0, b: proxy([1, 2, proxy('aaa')])}) 放进 {{}}, 渲染出来的会是{a: 0, b: [1, 2, 'aaa']}
+                模版上的指令用到的数据也是同样
+                （选项是api不也是这样吗，data里定义的引用类型console.log也是proxy啊，之前没想过这个）
+            
+            套了proxy的数据和原数据的区别：
+                proxy本身当然是引用类型，所有能对原数据做的操作它都支持
+                    比如数组的proxy也可以push，[0]索引访问, ...解构等，效果完全一致
+                    可以认为除了=赋值之外其他操作都是直接操作原数据
+                        这不就是引用类型的特性，其他都是对地址上的数据的操作，只有=是直接改变了指针储存的地址
+
+
+                唯独就是不能给proxy用=赋值
+                    原因也很简单，它是引用类型，存的是地址，用=等于是把这个指针储存的地址彻底改变了，指向了其他地方，那就啥都没了
+                    
+                    准确的说是不能给proxy树的根节点赋值，改变了根节点整棵树都变了
+                        给子节点用=赋值可以，proxy树的所有引用类型都只能是proxy，你给它赋值一个原始引用类型也会被自动包上proxy
+                            a = reactive({1: 1, 2: [2]}) 这里a.2是proxy([2])
+                            a.2 = [3] 现在a.2不是[3]而是proxy{[3]}
+
+                            a = ref([]) a.value想怎么搞怎么搞，随便=，因为它不是proxy树顶层,根节点下面的value节点才是我们要用的数组
+                            a = reactive([]) 这个数组本身就是根节点，一旦a = 就失去响应式，所以才要 originData.push(...mock) 而不是直接 originData = mock
+
+                        选项式api里data里定义的所有数据都在一个大的proxy对象下，访问不到proxy树根节点，自然是想怎么=就=
+                        组合式api里每个reactive出来的都是一个proxy树根节点，一赋值就gg，失去响应式，给它下面的节点赋值没问题
+                        
+
+                可以这么说，只要不console.log，使用的时候基本就感受不出proxy对象和原数据的区别
+                    对比一下 options api.html 和 composition api.html 代码, 区别也就是组合式api没有this和ref出来的用的时候要.value
+            */
+
+            return {
+               
+            }
+        }
+    }).mount('#app');
+</script>
+
+<style>
+    .container {
+        margin: 50px;
+    }
+
+    .content {
+        margin: 20px;
+    }
+</style>
+
+</html>
