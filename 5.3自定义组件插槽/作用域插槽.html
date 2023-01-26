@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app">
+        <!--使用具名插槽组件时需要用template把插入每个插槽的内容包裹，在template标签里通过v-slot或者简写#指定要插入的插槽名字-->
+        <my-container>
+            <template #main>
+                <p>内容部分</p>
+                <p>内容部分</p>
+            </template>
+            <template v-slot:header>
+            </template>
+             <!--只要指定插槽名字，顺序无所谓；插槽先入为主，已经被插入的插槽再插不会生效，比如下面两个“内容”不会生效-->
+            <!-- <template #main>
+                <p>内容</p>
+                <p>内容</p>
+            </template> -->
+
+            <template #footer="footerProps">
+                <p>{{footerProps}}</p>
+            </template>
+            <!-- 作用域插槽的template里就是个装数据的模版，模版怎么渲染由父组件定义，数据由子组件提供-->
+            <!-- 模版里可以访问到Props，有什么办法能从模版把数据送到父组件的data里，实现父子组件传值（自定义指令？）-->
+        </my-container>
+    </div>
+
+</body>
+
+<script>
+    const App = Vue.createApp({})
+    
+    const container2Component = {
+        template:   `<div>
+                        <template v-for="item in ['header', 'main', 'footer']">
+                            <template v-if="item == 'footer'">
+                                <slot :name="item" v-for="_ in 3" data1='1' data2='2'>item</slot>
+                            </template>
+                            <slot :name="item" v-else><h2>{{item}}</h2></slot>
+                        </template>
+                    </div>`
+    }
+
+    App.component('my-container', container2Component)
+    App.mount("#app")
+</script>
+
+</html>
