@@ -22,17 +22,16 @@
         template: '#my_temp',
         
         setup() {
-            array = [1, 2, 3]
-            a = Vue.ref(array)
-            b = Vue.ref(array)
-            array.push(4)
-            a.value.push(5)
-            console.log(array, a.value, b.value)
-            //  没有深拷贝，一个改了另外两个也改，有点离谱。。
-
+            a = Vue.ref([1, 2, 3])
+            console.log(Vue.reactive([1, 2, 3]))
+            console.log(a)
+            console.log(a.value)
+            a.value = 1 // 这个时候a里完全没有proxy了但它依然是响应式
+            console.log(a)
             /*
-            首先，ref(data) 和 reactive({value: data}) 基本完全等价，因此只讨论reactive
-
+            首先，ref(data) 和 reactive({value: data}) 基本等价，因此只讨论reactive
+                其实也有些许区别，ref出来的不是proxy，但是ref下的.value永远是一颗标准的proxy树，哪怕直接=更改.value，也就是更改树的根节点，也会被自动套上proxy
+                
             引入一个概念： 
                 无论怎么嵌套的数据结构都可以看作一个树状结构（不谈循环引用），节点存的不是普通类型就是引用类型的地址
                 比如【1， 2， {a: 3}】，根节点是数组的地址，两个子节点都是int，第三个子节点是对象的地址，第三个子节点有一个子节点是3
