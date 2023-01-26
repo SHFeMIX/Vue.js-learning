@@ -30,7 +30,8 @@
             console.log(a)
             /*
             首先，ref(data) 和 reactive({value: data}) 基本等价，因此只讨论reactive
-                其实也有些许区别，ref出来的不是proxy，但是ref下的.value永远是一颗标准的proxy树，哪怕直接=更改.value，也就是更改树的根节点，也会被自动套上proxy
+                其实也有些许区别，ref出来的不是proxy，但是ref下的.value永远是一颗标准的proxy树，哪怕直接=更改.value，也就是更改proxy树的根节点，也会被自动套上proxy
+                （ref类型的机制就是这样， 自动维护value属性）
                 
             引入一个概念： 
                 无论怎么嵌套的数据结构都可以看作一个树状结构（不谈循环引用），节点存的不是普通类型就是引用类型的地址
