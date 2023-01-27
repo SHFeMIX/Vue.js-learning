@@ -42,7 +42,7 @@
         template:   `<div>
                         <template v-for="item in ['header', 'main', 'footer']">
                             <template v-if="item == 'footer'">
-                                <slot :name="item" v-for="_ in 3" data1='1' data2='2'>item</slot>
+                                <slot :name="item" :data1="i" v-for="i in 3" data2='2'>item</slot>
                             </template>
                             <slot :name="item" v-else><h2>{{item}}</h2></slot>
                         </template>
