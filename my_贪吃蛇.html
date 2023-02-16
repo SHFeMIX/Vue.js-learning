@@ -12,34 +12,114 @@
 <style>
     .block {
         border: solid;
-        border-color: black
+        border-color: black;
+        width: 20px;
+        height: 20px;
     }
 </style>
 
 <body>
-    <div id="app"></div>
-
+    <div id="app" ></div>
     <template id="my_temp">
-        <div v-for="_ in 30">
-            <div style="display:inline-block" v-for="_ in 30">
-                <div class="block"></div>
-            </div>
+
+        <input @input="changeSize(parseInt($event.target.value))"> size 
+        <br/>
+        <div style="height: 23px" v-for="row in canvas">
+            <div :style="{display:'inline-block', backgroundColor: item ? 'black' : 'white'}" class="block" v-for="item in row"></div>
         </div>
+
     </template>
 </body>
+
+
 
 <script>
     Vue.createApp({
         template: '#my_temp',
 
-        data () {
+        data() {
             return {
-               
+                canvas: undefined,
+                tempX: undefined,
+                tempY: undefined,
             }
         },
 
         methods: {
-            
+            setTempAddr(bit) {
+                this.canvas[this.tempX][this.tempY] = bit
+            },
+
+            changeSize(size) {
+                if (!size) { return }
+
+                let canvas = []
+                for (let i = 0; i < size; i++) {
+                    canvas.push([])
+                    for (let j = 0; j < size; j++) {
+                        canvas[i].push(0)
+                    }
+                }
+
+                this.canvas = canvas
+                this.tempX = this.tempY = 0
+                this.setTempAddr(1)
+            },
+
+            move(event) {
+                if (this.canvas == undefined) return
+
+                this.setTempAddr(0)
+
+                if (event.key == 'ArrowLeft') {
+                    this.tempX -= 1
+                }
+                else if (event.key == 'ArrowRight') {
+                    this.tempX += 1
+                }
+                if (this.tempX < 0) {
+                    this.tempX = 0
+                }
+                else if (this.tempX >= this.canvas.length) {
+                    this.tempX = this.canvas.length - 1
+                }
+
+                if (event.key == 'ArrowUp') {
+                    this.tempY -= 1
+                }
+                else if (event.key == 'ArrowDown') {
+                    this.tempY += 1
+                }
+                if (this.tempY < 0) {
+                    this.tempY = 0
+                }
+                else if (this.tempY >= this.canvas.length) {
+                    this.tempY = this.canvas.length - 1
+                }
+
+                this.setTempAddr(1)
+            }
+        },
+
+        /*watch: {
+            tempAddr: {
+                handler(newValue, oldValue) {
+                    if (this.canvas == undefined) return
+                    if (oldValue.indexOf(undefined) == -1 && oldValue[0] < this.canvas.length && oldValue[1] < this.canvas.length) {
+                        this.canvas[oldValue[0]][oldValue[1]] = 0
+                    }
+
+                    if (newValue.indexOf(undefined) == -1) {
+                        this.canvas[newValue[0]][newValue[1]] = 1
+                    }
+                    
+                },
+                deep: true,
+            }
+        },*/
+
+        mounted() {
+            document.addEventListener('keydown', this.move)
         }
     }).mount('#app');
 </script>
