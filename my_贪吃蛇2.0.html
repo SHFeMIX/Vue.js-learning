@@ -47,8 +47,8 @@
 
             return {
                 canvas: canvas,
-                direction: 'ArrowRight',
-                bodyList: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]],
+                direction: undefined,
+                bodyList: undefined,
                 movement: undefined
             }
         },
@@ -78,14 +78,13 @@
                     alert('游戏失败')
                 }
                 this.bodyList.push(head)
-                this.setAddr(head, 1)
                 
-                if(0) { //在这里写吃到苹果的逻辑、
-                    // 随即生成一个新苹果
+                if(this.canvas[head[0]][head[1]]) { //在这里写吃到苹果的逻辑、
+                    // 随机生成一个新苹果
                     return
                 }
+                this.setAddr(head, 1)
                 this.setAddr(this.bodyList.shift(), 0)
-                console.log(JSON.stringify(this.bodyList))
             },
 
             newApple() {
@@ -97,6 +96,8 @@
         mounted() {
             document.addEventListener('keydown', (event) => {this.direction = event.key})
             this.movement = setInterval(this.autoMove, 500)
+            //随机出生地点，方向 （随机一个坐标，上下左右哪个方向空间最大就往哪
+            //随机生成一个新苹果
         }
              
     }).mount('#app');
