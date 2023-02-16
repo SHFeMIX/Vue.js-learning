@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<style>
+    .block {
+        border: solid;
+        border-color: black;
+        width: 20px;
+        height: 20px;
+    }
+</style>
+
+<body>
+    <div id="app" ></div>
+    <template id="my_temp">
+
+        <div style="height: 23px" v-for="row in canvas">
+            <div :style="{display:'inline-block', backgroundColor: item ? 'black' : 'white'}" class="block" v-for="item in row"></div>
+        </div>
+
+    </template>
+</body>
+
+
+<script>
+    const App = Vue.createApp({
+        template: '#my_temp',
+
+        data() {
+            const size = 15
+            let canvas = []
+            for (let i = 0; i < size; i++) {
+                canvas.push([])
+                for (let j = 0; j < size; j++) {
+                    canvas[i].push((i == 0 && j < 5) ? 1 : 0)
+                }
+            }
+            // 随机生成一个新苹果
+
+            return {
+                canvas: canvas,
+                direction: 'ArrowRight',
+                bodyList: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]],
+                movement: undefined
+            }
+        },
+
+        methods: {
+            setAddr(addr, bit) {
+                this.canvas[addr[0]][addr[1]] = bit
+            },
+
+            autoMove() {
+                let head = [...this.bodyList[this.bodyList.length - 1]]
+
+                if (this.direction == 'ArrowRight') {
+                    head[1] += 1
+                }
+                if (this.direction == 'ArrowLeft') {
+                    head[1] -= 1
+                }
+                if (this.direction == 'ArrowUp') {
+                    head[0] -= 1
+                }
+                if (this.direction == 'ArrowDown') {
+                    head[0] += 1
+                }
+
+                if (0) { // 在这里写失败的逻辑，head的x和y小于0或者等于canvas.length，或者head已经在bodyList里了（JSON.strinfy比较两个字符串一个是否包含另一个）
+                    alert('游戏失败')
+                }
+                this.bodyList.push(head)
+                this.setAddr(head, 1)
+                
+                if(0) { //在这里写吃到苹果的逻辑、
+                    // 随即生成一个新苹果
+                    return
+                }
+                this.setAddr(this.bodyList.shift(), 0)
+                console.log(JSON.stringify(this.bodyList))
+            },
+
+            generateNewApple() {
+                // 0-canvas.length之间取随机数取两次，如果这俩坐标在bodyList里就重新去（还是JSON.strify判断在不在）
+                return
+            }
+        },
+
+        mounted() {
+            document.addEventListener('keydown', (event) => {this.direction = event.key})
+            this.movement = setInterval(this.autoMove, 500)
+        }
+             
+    }).mount('#app');
+</script>
+
+</html>

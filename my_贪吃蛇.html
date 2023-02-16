@@ -34,7 +34,7 @@
 
 
 <script>
-    Vue.createApp({
+    const App = Vue.createApp({
         template: '#my_temp',
 
         data() {
@@ -42,12 +42,13 @@
                 canvas: undefined,
                 tempX: undefined,
                 tempY: undefined,
+                direction: 'right'
             }
         },
 
         methods: {
             setTempAddr(bit) {
-                this.canvas[this.tempX][this.tempY] = bit
+                this.canvas[this.tempY][this.tempX] = bit
             },
 
             changeSize(size) {
