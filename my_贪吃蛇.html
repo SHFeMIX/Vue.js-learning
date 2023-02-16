@@ -51,7 +51,10 @@
             },
 
             changeSize(size) {
-                if (!size) { return }
+                if (!size) { 
+                    this.canvas = undefined
+                    return 
+                }
 
                 let canvas = []
                 for (let i = 0; i < size; i++) {
@@ -77,18 +80,19 @@
                 else if (event.key == 'ArrowRight') {
                     this.tempX += 1
                 }
-                if (this.tempX < 0) {
-                    this.tempX = 0
-                }
-                else if (this.tempX >= this.canvas.length) {
-                    this.tempX = this.canvas.length - 1
-                }
 
                 if (event.key == 'ArrowUp') {
                     this.tempY -= 1
                 }
                 else if (event.key == 'ArrowDown') {
                     this.tempY += 1
+                }
+
+                if (this.tempX < 0) {
+                    this.tempX = 0
+                }
+                else if (this.tempX >= this.canvas.length) {
+                    this.tempX = this.canvas.length - 1
                 }
                 if (this.tempY < 0) {
                     this.tempY = 0
@@ -101,23 +105,10 @@
             }
         },
 
-        /*watch: {
-            tempAddr: {
-                handler(newValue, oldValue) {
-                    if (this.canvas == undefined) return
-                    if (oldValue.indexOf(undefined) == -1 && oldValue[0] < this.canvas.length && oldValue[1] < this.canvas.length) {
-                        this.canvas[oldValue[0]][oldValue[1]] = 0
-                    }
-
-                    if (newValue.indexOf(undefined) == -1) {
-                        this.canvas[newValue[0]][newValue[1]] = 1
-                    }
-                    
-                },
-                deep: true,
-            }
-        },*/
-
+        // 想同时监听data里两个值，任意一个变化了就执行一个依赖两个值的函数，直接在data里建一个引用类型不行，因为每次获取的都是同一个地址，watch的new和old全都是new
+        // 用一个计算属性，返回包含这两个值的引用类型就可以了，因为每次获取都是新建的引用类型的地址，watch里的new和old就没问题
+        // 那好像还不如两个值分别写两个watch啊，那样可读性高多了
+        
         mounted() {
             document.addEventListener('keydown', this.move)
         }
