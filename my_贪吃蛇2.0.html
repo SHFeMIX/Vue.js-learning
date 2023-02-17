@@ -48,7 +48,8 @@
                 canvas: canvas,
                 direction: undefined,
                 bodyList: [],
-                movement: undefined
+                movement: undefined,
+                acceptSet: false
             }
         },
 
@@ -97,6 +98,7 @@
                 }
 
                 this.setAddr(head, 1)
+                this.acceptSet = true
             },
 
             newApple() {
@@ -111,6 +113,9 @@
 
         mounted() {
             document.addEventListener('keydown', (event) => {
+                if (!this.acceptSet) {
+                    return
+                }
                 // 不能倒着走
                 if (this.direction == 'ArrowUp' && event.key == 'ArrowDown') {
                     return
@@ -126,6 +131,7 @@
                 }
 
                 this.direction = event.key
+                this.acceptSet = false
             })
             
 
