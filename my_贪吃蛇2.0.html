@@ -34,6 +34,7 @@
     const App = Vue.createApp({
         template: '#my_temp',
 
+        /*
         setup() {
             const size = 15
             let temp = []
@@ -153,8 +154,8 @@
                 canvas
             }
         },
+        */
 
-        /*
         data() {
             const size = 15
             let canvas = []
@@ -255,7 +256,6 @@
                 this.acceptSet = false
             })
             
-
             //随机出生地点，方向 （随机一个坐标，上下左右哪个方向空间最大就往哪
             initHead = this.newApple()
             this.setAddr(initHead, 1)
@@ -286,7 +286,7 @@
             // 开始自动移动
             this.movement = setInterval(this.autoMove, 500)
         }
-        */   
+         
     }).mount('#app');
 </script>
 
