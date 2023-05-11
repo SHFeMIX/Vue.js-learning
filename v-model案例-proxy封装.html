@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app">
+        <Login v-model="loginData"></Login>
+        <button @click="() => loginData={name:'1', email:'2', password:'3'}">change</button>
+        <button @click="() => loginData.name='aaa'">change2</button>
+    </div>
+
+</body>
+
+<script>
+    const app = Vue.createApp({
+
+        data() {
+            return {
+                loginData: {
+                    name: "",
+                    email: "",
+                    password: ""
+                }
+            }
+        },
+
+        watch: {
+            loginData: {
+              handler(val) {
+                console.log(val)
+              },
+              deep: true
+            }
+        }
+    })
+
+    const login = {
+        template: `
+            <div>
+                Email: <br /><input v-model="model.email" type="text" /><br />
+                Password: <br /><input v-model="model.password" type="text" /><br />
+
+                Name: <br /><input v-model="model.name" /><br />
+            </div>`,
+
+        props: ['modelValue'],
+
+        emits: ['update:modelValue'],
+
+        data() {
+            return {
+                model: null
+            }
+        },
+
+        // computed: {
+        //     model() {
+        //      const temp = this;
+        //         return new Proxy(temp.modelValue, {
+        //             set(target, key, value) {
+        //                 temp.$emit('update:modelValue', {
+        //                     ...target,
+        //                     [key]: value
+        //                 });
+        //                 return true;
+        //             }
+        //         })
+        //     }
+        // },
+        
+        // 抖音搜 渡一web前端学习频道第157集
+        
+        // watch搭配62的model也可以实现
+        watch: { // watch和proxy某种意义上很类似，都是数据变化了就做点别的事情
+            // model: {
+            //     handler(){
+            //         if (JSON.stringify(this.model) === JSON.stringify(this.modelValue)) return;
+            //         this.$emit('update:modelValue', this.model);
+            //     },
+            //     deep: true
+            // },
+
+            // modelValue: {
+            //     handler(val) {
+            //         this.model = {...val};
+            //     },
+            //     deep: true,
+            // }
+
+            // 这种写法就有点巧妙了, 感觉这么做最好
+            // 不用deep是因为model本身就是modelValue的代理，只要modlValue本身地址不变，属性变了model就会变，所以不用deep
+            // 那感觉和用computed完全一样了，那是不是这么做性能会好一点，因为只要modelValue本身地址没变都不需要触发，而computed每次都会触发
+            // 本质其实就是，需要的只是套一层proxy，并不需要计算属性的功能
+            modelValue: {
+                handler() {
+                    const temp = this
+                    this.model = new Proxy(this.modelValue, {
+                        set(target, key, value) {
+                            temp.$emit('update:modelValue', {
+                                ...target,
+                                [key]: value
+                            });
+                            return true;
+                        }
+                    })
+                },
+                immediate: true
+            },
+        },
+
+        mounted() {
+            console.log(111, this.modelValue)
+        }
+    }
+
+    app.component('Login', login)
+    app.mount('#app');
+</script>
+
+</html>
