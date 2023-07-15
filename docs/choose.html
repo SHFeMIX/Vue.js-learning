@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <template id="my_temp">
+        <h3>备选项：</h3>
+        <ol>
+            <li v-for="(item, index) in options">{{ item }} <button @click="options.splice(index, 1)">删除</button></li>
+        </ol>
+        新增： <input type="text" v-model="newOption"> <button @click="options.push(newOption), newOption=''">确定</button>
+        <br />
+        <br />
+        <button style="color: blue" @click="getResult">生成结果</button>
+        <br/>
+        <br/>
+        <div v-if="result">
+            从所有备选项里随机抽样了69次，结果如下：
+            <ol>
+                <li v-for="item in orderedResult">{{ item[0] }}: {{ item[1] }}次</li>
+                
+            </ol>
+            <p>最终结果：{{orderedResult[0][0]}}</p>
+        </div>
+    </template>
+</body>
+
+<script>
+    Vue.createApp({
+        template: '#my_temp',
+
+        data() {
+            return {
+                options: ['天府飘香', '大东北'],
+                newOption: '',
+                result: null
+            }
+        },
+
+        computed: {
+            orderedResult() {
+                return Object.entries(this.result).sort((a, b) => b[1] - a[1])
+            }
+        },
+
+        methods: {
+            getResult() {
+                let temp = {}
+                for (let i = 0; i < 69; i++) {
+                    const choice = this.options[Math.floor(Math.random() * this.options.length)]
+                    if (temp.hasOwnProperty(choice)) {
+                        temp[choice] += 1
+                    } else {
+                        temp[choice] = 1
+                    }
+                }
+
+                this.result = temp
+            }
+        }
+    }).mount('#app');
+</script>
+
+</html>

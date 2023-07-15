@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>贪吃蛇</title>
+
+    <script src="https://unpkg.com/vue@next"></script>
+
+    <!-- <link rel="stylesheet" href="https://unpkg.com/element-plus/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-plus/lib/index.full.js"></script> -->
+    <!-- <script src="https://unpkg.com/@element-plus/icons-vue"></script> -->
+
+</head>
+
+<style>
+    .block {
+        border: solid;
+        border-color: black;
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+    }
+
+    .buttonContainer {
+        display: flex;
+        justify-content: center;
+    }
+
+    .buttonContainer button {
+        margin: 10px;
+        width: 70px;
+        height: 50px;
+    }
+</style>
+
+<body>
+    <div id="app"></div>
+
+    <template id="my_temp">
+
+        <div style="height: 23px" v-for="row in canvas">
+            <div :style="{backgroundColor: !item ? 'white' : (item == 1 ? 'black' : 'red')}" class="block"
+                v-for="item in row"></div>
+        </div>
+
+        <br />
+
+        <div class="buttonContainer">
+            <button @click="move('ArrowUp')">Up</button>
+        </div>
+
+        <div class="buttonContainer">
+            <button @click="move('ArrowLeft')">Left</button>
+            <button @click="move('ArrowDown')">Down</button>
+            <button @click="move('ArrowRight')">Right</button>
+        </div>
+
+
+
+    </template>
+</body>
+
+
+<script>
+    const app = Vue.createApp({
+        template: '#my_temp',
+
+        data() {
+            const size = 15
+            let canvas = []
+            for (let i = 0; i < size; i++) {
+                canvas.push([])
+                for (let j = 0; j < size; j++) {
+                    canvas[i].push(0)
+                }
+            }
+
+            return {
+                canvas: canvas,
+                direction: undefined,
+                bodyList: [],
+                movement: undefined,
+                acceptSet: false
+            }
+        },
+
+        methods: {
+            setAddr(addr, bit) {
+                this.canvas[addr[0]][addr[1]] = bit
+            },
+
+            addrInList(addr) {
+                return JSON.stringify(this.bodyList).indexOf(JSON.stringify(addr)) != -1
+            },
+
+            autoMove() {
+                // 计算出新的头
+                let head = [...this.bodyList[this.bodyList.length - 1]]
+
+                if (this.direction == 'ArrowRight') {
+                    head[1] += 1
+                }
+                if (this.direction == 'ArrowLeft') {
+                    head[1] -= 1
+                }
+                if (this.direction == 'ArrowUp') {
+                    head[0] -= 1
+                }
+                if (this.direction == 'ArrowDown') {
+                    head[0] += 1
+                }
+
+                // 如果头出界或者已经在bodyList里就判定失败
+                if (head.indexOf(-1) != -1 || head.indexOf(this.canvas.length) != -1 || this.addrInList(head)) { // 在这里写失败的逻辑，head的x和y小于0或者等于canvas.length，或者head已经在bodyList里了（JSON.strinfy比较两个字符串一个是否包含另一个）
+                    alert('游戏失败')
+                    clearInterval(this.movement)
+                    return
+                }
+
+                this.bodyList.push(head)
+
+                // 如果没吃到苹果,尾巴消掉
+                if (!this.canvas[head[0]][head[1]]) {
+                    this.setAddr(this.bodyList.shift(), 0)
+                }
+                else {
+                    // 吃到了就生成一个新苹果
+                    this.setAddr(this.newApple(), 2)
+                }
+
+                this.setAddr(head, 1)
+                this.acceptSet = true
+            },
+
+            newApple() {
+                // 0-canvas.length之间取随机数取两次，如果这俩坐标在bodyList里就重新去（还是JSON.strify判断在不在）
+                do {
+                    newAddr = [Math.floor(Math.random() * this.canvas.length), Math.floor(Math.random() * this.canvas.length)]
+                } while (this.addrInList(newAddr))
+
+                return newAddr
+            },
+
+            move(direction) {
+                if (!this.acceptSet) {
+                    return
+                }
+                // 不能倒着走
+                if (this.direction == 'ArrowUp' && direction == 'ArrowDown') {
+                    return
+                }
+                if (this.direction == 'ArrowDown' && direction == 'ArrowUp') {
+                    return
+                }
+                if (this.direction == 'ArrowLeft' && direction == 'ArrowRight') {
+                    return
+                }
+                if (this.direction == 'ArrowRight' && direction == 'ArrowLeft') {
+                    return
+                }
+
+                this.direction = direction
+                this.acceptSet = false
+            }
+        },
+
+        mounted() {
+            document.addEventListener('keydown', (event) => { this.move(event.key) })
+
+            //随机出生地点，方向 （随机一个坐标，上下左右哪个方向空间最大就往哪
+            initHead = this.newApple()
+            this.setAddr(initHead, 1)
+            this.bodyList.push(initHead)
+
+            up_space = initHead[0]
+            down_space = this.canvas.length - 1 - initHead[0]
+            left_space = initHead[1]
+            right_space = this.canvas.length - 1 - initHead[1]
+
+            max_space = Math.max(up_space, down_space, left_space, right_space)
+            if (max_space == up_space) {
+                this.direction = 'ArrowUp'
+            }
+            else if (max_space == down_space) {
+                this.direction = 'ArrowDown'
+            }
+            else if (max_space == left_space) {
+                this.direction = 'ArrowLeft'
+            }
+            else {
+                this.direction = 'ArrowRight'
+            }
+
+            // 随机一个苹果
+            this.setAddr(this.newApple(), 2)
+
+            // 开始自动移动
+            this.movement = setInterval(this.autoMove, 500)
+        }
+
+    })
+
+    //app.use(ElementPlus)
+    app.mount('#app');
+</script>
+
+</html>
