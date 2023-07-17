@@ -29,8 +29,7 @@
           y.value = event.pageY
         }
       
-        // 一个组合式函数也可以挂靠在所属组件的生命周期上
-        // 来启动和卸载副作用
+        // 启动和卸载副作用
         Vue.onMounted(() => window.addEventListener('mousemove', update))
         Vue.onUnmounted(() => window.removeEventListener('mousemove', update))
       
@@ -44,6 +43,7 @@
         setup() {
             const { x, y } = useMouse()
             // 组合式函数本质上就是普通函数，在setup里调用的时候正常执行，不用任何编译构建步骤
+            // 就是把封装成函数的代码调到组件的setup里面来执行，和直接把代码复制黏贴过来没有太大区别
             Vue.onMounted(() => console.log(111))
             Vue.onMounted(() => console.log(222))
             // 同名的生命周期来几个都可以，都会从上到下依次执行
