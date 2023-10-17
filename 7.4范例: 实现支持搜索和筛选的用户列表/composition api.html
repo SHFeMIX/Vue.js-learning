@@ -70,7 +70,6 @@
             sexFilter = Vue.ref(-1)
             searchKey = Vue.ref('')
             originData = Vue.ref([])
-            // 完全等价于 reactive({value: []})
 
             Vue.onMounted(() => {
                 setTimeout(() =>{originData.value = mock}, 3000)
