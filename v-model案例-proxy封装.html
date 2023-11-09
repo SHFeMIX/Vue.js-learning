@@ -16,6 +16,12 @@
         <button @click="() => loginData.name='aaa'">change2</button>
     </div>
 
+    <template id="login">
+        Email: <br /><input v-model="model.email" type="text" /><br />
+        Password: <br /><input v-model="model.password" type="text" /><br />
+        Name: <br /><input v-model="model.name" /><br />
+    </template>
+
 </body>
 
 <script>
@@ -42,13 +48,10 @@
     })
 
     const login = {
-        template: `
-            <div>
-                Email: <br /><input v-model="model.email" type="text" /><br />
-                Password: <br /><input v-model="model.password" type="text" /><br />
-
-                Name: <br /><input v-model="model.name" /><br />
-            </div>`,
+        /* template: `Email: <br /><input v-model="model.email" type="text" /><br />
+                   Password: <br /><input v-model="model.password" type="text" /><br />
+                   Name: <br /><input v-model="model.name" /><br />`, */
+        template: '#login',
 
         props: ['modelValue'],
 
@@ -100,10 +103,10 @@
             // 本质其实就是，需要的只是套一层proxy，并不需要计算属性的功能
             modelValue: {
                 handler() {
-                    const temp = this
-                    this.model = new Proxy(this.modelValue, {
+                    const _this = this
+                    _this.model = new Proxy(this.modelValue, {
                         set(target, key, value) {
-                            temp.$emit('update:modelValue', {
+                            _this.$emit('update:modelValue', {
                                 ...target,
                                 [key]: value
                             });
