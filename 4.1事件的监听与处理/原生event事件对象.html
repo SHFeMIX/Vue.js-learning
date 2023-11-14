@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <template id="my_temp">
+        <button @click="click">click me</button>
+        <!-- 直接绑定一个函数名，不用$event，也会接收到原生event对象(和原生js的addEventListner传入的回调函数一样)-->
+        <!-- 只适用于事件处理函数只接收event一个参数的情况 -->
+        <button @click="click($event, 1, 2)">click me</button>
+        <!-- 直接绑定一个函数名就是框架内部调用，只传入event对象一个参数；绑定一个函数的调用就是按你指定的方式调用，但是可以获取到$event对象传入函数 -->
+    </template>
+</body>
+
+<script>
+    Vue.createApp({
+        template: '#my_temp',
+
+        data () {
+            return {
+               
+            }
+        },
+
+        methods: {
+            click(e) {
+                console.log(e)
+                console.log(arguments.length, arguments)
+            }
+        }
+    }).mount('#app');
+</script>
+
+</html>
