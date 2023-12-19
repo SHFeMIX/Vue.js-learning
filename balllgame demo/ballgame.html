@@ -28,9 +28,9 @@
 <body>
     <div id="app">
         <img src='ball.png' :style="ball_style" id='ball' 
-            @mousedown="this.hold = true" 
+            @mousedown="hold = true" 
             @mousemove.prevent="move_ball" 
-            @mouseup="this.hold = false, back()">
+            @mouseup="hold = false, back()">
         </img>
         <h1 id="scoreboard">Score: {{score}}</h1>
         <img src='hoop.png' id='hoop'></img>

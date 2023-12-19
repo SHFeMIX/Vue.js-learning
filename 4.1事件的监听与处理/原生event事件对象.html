@@ -27,13 +27,13 @@
 
         data() {
             return {
-
+                
             }
         },
 
         methods: {
-            click(e) {
-                console.log(e)
+            click({clientX: X, clientY: Y}, ...args) {
+                console.log(X, Y, args);
                 console.log(arguments.length, arguments)
             }
         }
